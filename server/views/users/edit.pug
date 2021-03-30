@@ -1,0 +1,11 @@
+extends ../layouts/application.pug
+
+block header
+  = t('views.users.edit.editing')
+
+block content
+  +formFor()(action='edit' method='post')
+    input(type='hidden' name='_method' value='PATCH')
+    +input(user, 'email', errors)(type="text")
+    +input(user, 'password', errors)(type="password")
+    +submit(user)(value=t('views.users.edit.submit'))
