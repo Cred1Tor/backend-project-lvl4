@@ -62,6 +62,64 @@ describe('test users CRUD', () => {
     expect(user).toMatchObject(expected);
   });
 
+  it('update', async () => {
+    const responseSignIn = await app.inject({
+      method: 'POST',
+      url: app.reverse('session'),
+      payload: {
+        data: testData.users.existing,
+      },
+    });
+
+    const [sessionCookie] = responseSignIn.cookies;
+    const { name, value } = sessionCookie;
+    const cookie = { [name]: value };
+    const { id } = await models.user.query().findOne({ email: testData.users.existing.email });
+    const params = testData.users.new;
+
+    const responseUpdate = await app.inject({
+      method: 'PATCH',
+      url: app.reverse('editUser', { id }),
+      cookies: cookie,
+      payload: {
+        data: params,
+      },
+    });
+
+    expect(responseUpdate.statusCode).toBe(302);
+    const updatedUser = await models.user.query().findById(id);
+    const expected = {
+      ..._.omit(params, 'password'),
+      passwordDigest: encrypt(params.password),
+    };
+    expect(updatedUser).toMatchObject(expected);
+  });
+
+  it('delete', async () => {
+    const responseSignIn = await app.inject({
+      method: 'POST',
+      url: app.reverse('session'),
+      payload: {
+        data: testData.users.existing,
+      },
+    });
+
+    const [sessionCookie] = responseSignIn.cookies;
+    const { name, value } = sessionCookie;
+    const cookie = { [name]: value };
+    const { id } = await models.user.query().findOne({ email: testData.users.existing.email });
+
+    const responseDelete = await app.inject({
+      method: 'DELETE',
+      url: app.reverse('deleteUser', { id }),
+      cookies: cookie,
+    });
+
+    expect(responseDelete.statusCode).toBe(302);
+    const deletedUser = await models.user.query().findById(id);
+    expect(deletedUser).toBeUndefined();
+  });
+
   afterEach(async () => {
     // после каждого теста откатываем миграции
     await knex.migrate.rollback();
