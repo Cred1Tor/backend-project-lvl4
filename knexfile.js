@@ -27,6 +27,7 @@ module.exports = {
       database: 'task-manager',
       user: 'postgres',
       password: '123456',
+      host: 'localhost',
     },
     useNullAsDefault: true,
     migrations,
