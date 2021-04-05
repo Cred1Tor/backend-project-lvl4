@@ -24,7 +24,10 @@ module.exports = {
   production: {
     client: 'pg',
     connection: {
-      filename: './database.sqlite',
+      host: 'localhost',
+      user: 'postgres',
+      password: '123456',
+      database: 'task-manager',
     },
     useNullAsDefault: true,
     migrations,
