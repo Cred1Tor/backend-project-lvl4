@@ -23,12 +23,7 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: {
-      host: 'localhost',
-      user: 'postgres',
-      password: '123456',
-      database: 'task-manager',
-    },
+    connection: 'postgres://postgres:qwerty@localhost/task-manager',
     useNullAsDefault: true,
     migrations,
   },
