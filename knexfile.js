@@ -1,4 +1,7 @@
 // @ts-check
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const path = require('path');
 
@@ -23,7 +26,7 @@ module.exports = {
   },
   production: {
     client: 'pg',
-    connection: 'postgres://localhost/task-manager',
+    connection: process.env.DB_URL,
     useNullAsDefault: true,
     migrations,
   },
