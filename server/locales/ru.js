@@ -46,6 +46,11 @@ module.exports = {
         id: 'ID',
         email: 'Email',
         createdAt: 'Дата создания',
+        actions: 'Действия',
+        buttons: {
+          edit: 'Редактировать',
+          delete: 'Удалить',
+        },
         new: {
           submit: 'Сохранить',
           signUp: 'Регистрация',
