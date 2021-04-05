@@ -6,10 +6,17 @@ export default (app) => {
   const authorizeById = async (req, reply, done) => {
     const user = await app.objection.models.user.query().findOne({ id: req.params.id });
     if (!user) {
-      return done(app.httpErrors.notFound('User not found'));
+      console.log('!user');
+      req.flash('error', i18next.t('flash.users.notFound'));
+      reply.redirect(app.reverse('users'));
+      return reply;
     }
-    if (!req.isAuthenticated() || req.user.id !== user.id) {
-      return done(app.httpErrors.unauthorized('You can only edit your own profile'));
+    if (!req.isAuthenticated()) {
+      req.flash('error', i18next.t('flash.authError'));
+      reply.redirect(app.reverse('users'));
+    } else if (req.user.id !== user.id) {
+      req.flash('error', i18next.t('flash.users.unauthorized'));
+      reply.redirect(app.reverse('users'));
     }
     return done();
   };
@@ -38,6 +45,7 @@ export default (app) => {
       }
     })
     .get('/users/:id/edit', { preValidation: authorizeById }, async (req, reply) => {
+      console.log('here');
       const user = await app.objection.models.user.query().findOne({ id: req.params.id });
       reply.render('users/edit', { user });
       return reply;
@@ -65,7 +73,7 @@ export default (app) => {
         return reply;
       } catch {
         req.flash('error', i18next.t('flash.users.delete.error'));
-        reply.render('users');
+        reply.render('users/index');
         return reply;
       }
     });
