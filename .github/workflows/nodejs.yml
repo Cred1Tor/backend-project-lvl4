@@ -22,7 +22,7 @@ jobs:
         run: |
           sudo systemctl start postgresql.service
           pg_isready
-          sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD '123456'
+          sudo -u postgres psql --command="ALTER USER postgres WITH PASSWORD '123456'"
           sudo -u postgres createdb task-manager
           PGPASSWORD=123456 psql --username=postgres --host=localhost --list timetable
       - name: npm install, build
