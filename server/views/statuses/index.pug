@@ -1,0 +1,19 @@
+extends ../layouts/application.pug
+
+block content
+  table.table.table-striped
+    thead
+      tr
+        th= t('views.statuses.id')
+        th= t('views.statuses.name')
+        th= t('views.statuses.createdAt')
+        th= t('views.statuses.actions')
+    tbody
+      each status in statuses
+        tr
+          td= status.id
+          td= status.name
+          td= formatDate(status.createdAt)
+          td
+            a(href=`statuses/${status.id}/edit`)= t('views.statuses.buttons.edit')
+            +buttonTo(`statuses/${status.id}`, 'delete')(value=t('views.statuses.buttons.delete'))
