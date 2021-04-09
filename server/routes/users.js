@@ -6,7 +6,6 @@ export default (app) => {
   const authorizeById = async (req, reply, done) => {
     const user = await app.objection.models.user.query().findOne({ id: req.params.id });
     if (!user) {
-      console.log('!user');
       req.flash('error', i18next.t('flash.users.notFound'));
       reply.redirect(app.reverse('users'));
       return reply;
@@ -45,7 +44,6 @@ export default (app) => {
       }
     })
     .get('/users/:id/edit', { preValidation: authorizeById }, async (req, reply) => {
-      console.log('here');
       const user = await app.objection.models.user.query().findOne({ id: req.params.id });
       reply.render('users/edit', { user });
       return reply;
