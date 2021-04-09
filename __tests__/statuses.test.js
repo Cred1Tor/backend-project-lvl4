@@ -52,7 +52,7 @@ describe('test statuses CRUD', () => {
     });
 
     expect(response.statusCode).toBe(302);
-    const taskStatus = await models.taskstatus.query().findOne({ name: params.name });
+    const taskStatus = await models.taskStatus.query().findOne({ name: params.name });
     expect(taskStatus).toMatchObject(params);
   });
 
@@ -68,7 +68,7 @@ describe('test statuses CRUD', () => {
     const [sessionCookie] = responseSignIn.cookies;
     const { name, value } = sessionCookie;
     const cookie = { [name]: value };
-    const { id } = await models.taskstatus.query().findOne({
+    const { id } = await models.taskStatus.query().findOne({
       name: testData.statuses.existing.name,
     });
     const params = testData.statuses.new;
@@ -83,7 +83,7 @@ describe('test statuses CRUD', () => {
     });
 
     expect(responseUpdate.statusCode).toBe(302);
-    const updatedStatus = await models.taskstatus.query().findById(id);
+    const updatedStatus = await models.taskStatus.query().findById(id);
     expect(updatedStatus).toMatchObject(params);
   });
 
@@ -99,7 +99,7 @@ describe('test statuses CRUD', () => {
     const [sessionCookie] = responseSignIn.cookies;
     const { name, value } = sessionCookie;
     const cookie = { [name]: value };
-    const { id } = await models.taskstatus.query().findOne({
+    const { id } = await models.taskStatus.query().findOne({
       name: testData.statuses.existing.name,
     });
 
@@ -110,7 +110,7 @@ describe('test statuses CRUD', () => {
     });
 
     expect(responseDelete.statusCode).toBe(302);
-    const deletedStatus = await models.taskstatus.query().findById(id);
+    const deletedStatus = await models.taskStatus.query().findById(id);
     expect(deletedStatus).toBeUndefined();
   });
 
