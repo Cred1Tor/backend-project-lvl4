@@ -8,6 +8,7 @@ const controllers = [
   welcome,
   users,
   session,
+  statuses,
 ];
 
 export default (app) => controllers.forEach((f) => f(app));
