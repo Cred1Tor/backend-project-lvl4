@@ -58,6 +58,8 @@ module.exports = {
         new: {
           signIn: 'Вход',
           submit: 'Войти',
+          email: 'Email',
+          password: 'Пароль',
         },
       },
       users: {
@@ -72,10 +74,14 @@ module.exports = {
         new: {
           submit: 'Сохранить',
           signUp: 'Регистрация',
+          email: 'Email',
+          password: 'Пароль',
         },
         edit: {
           submit: 'Изменить',
           editing: 'Изменение пользователя',
+          email: 'Email',
+          password: 'Пароль',
         },
       },
       statuses: {
@@ -91,10 +97,12 @@ module.exports = {
         new: {
           submit: 'Создать',
           creating: 'Создание статуса',
+          name: 'Наименование',
         },
         edit: {
           submit: 'Изменить',
           editing: 'Изменение статуса',
+          name: 'Наименование',
         },
       },
       welcome: {
