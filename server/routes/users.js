@@ -3,12 +3,12 @@
 import i18next from 'i18next';
 
 export default (app) => {
-  const authorizeById = async (req, reply, done) => {
+  const authorizeById = async (req, reply) => {
     const user = await app.objection.models.user.query().findOne({ id: req.params.id });
     if (!user) {
       req.flash('error', i18next.t('flash.users.notFound'));
       reply.redirect(app.reverse('users'));
-      return reply;
+      return;
     }
     if (!req.isAuthenticated()) {
       req.flash('error', i18next.t('flash.authError'));
@@ -17,7 +17,6 @@ export default (app) => {
       req.flash('error', i18next.t('flash.users.unauthorized'));
       reply.redirect(app.reverse('users'));
     }
-    return done();
   };
 
   app
