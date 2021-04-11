@@ -66,12 +66,10 @@ export default (app) => {
       try {
         await app.objection.models.taskStatus.query().deleteById(req.params.id);
         req.flash('info', i18next.t('flash.statuses.delete.success'));
-        reply.render('statuses/index');
-        return reply;
       } catch {
         req.flash('error', i18next.t('flash.statuses.delete.error'));
-        reply.render('statuses/index');
-        return reply;
       }
+      reply.redirect(app.reverse('statuses'));
+      return reply;
     });
 };
