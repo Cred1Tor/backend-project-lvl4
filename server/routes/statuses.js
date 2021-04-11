@@ -3,23 +3,21 @@
 import i18next from 'i18next';
 
 export default (app) => {
-  const authorize = async (req, reply, done) => {
+  const authorize = (req, reply, done) => {
     if (!req.isAuthenticated()) {
       req.flash('error', i18next.t('flash.authError'));
       reply.redirect(app.reverse('root'));
-      return reply;
+      return done();
     }
     return done();
   };
 
-  const verifyStatusId = async (req, reply, done) => {
+  const verifyStatusId = async (req, reply) => {
     const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
     if (!status) {
       req.flash('error', i18next.t('flash.statuses.notFound'));
       reply.redirect(app.reverse('statuses'));
-      return reply;
     }
-    return done();
   };
 
   app
