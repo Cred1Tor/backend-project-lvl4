@@ -13,7 +13,7 @@ export default (app) => {
   };
 
   const verifyStatusId = async (req, reply, done) => {
-    const status = await app.objection.models.user.query().findOne({ id: req.params.id });
+    const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
     if (!status) {
       req.flash('error', i18next.t('flash.statuses.notFound'));
       reply.redirect(app.reverse('statuses'));
@@ -67,9 +67,8 @@ export default (app) => {
     .delete('/statuses/:id', { name: 'deleteStatus', preValidation: [authorize, verifyStatusId] }, async (req, reply) => {
       try {
         await app.objection.models.taskStatus.query().deleteById(req.params.id);
-        req.logOut();
         req.flash('info', i18next.t('flash.statuses.delete.success'));
-        reply.redirect(app.reverse('root'));
+        reply.render('statuses/index');
         return reply;
       } catch {
         req.flash('error', i18next.t('flash.statuses.delete.error'));
