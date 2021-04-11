@@ -12,10 +12,11 @@ export default (app) => {
     }
     if (!req.isAuthenticated()) {
       req.flash('error', i18next.t('flash.authError'));
+      reply.code(401).redirect(app.reverse('users'));
     } else if (req.user.id !== user.id) {
       req.flash('error', i18next.t('flash.users.unauthorized'));
+      reply.code(401).redirect(app.reverse('users'));
     }
-    reply.code(401).redirect(app.reverse('users'));
   };
 
   app
