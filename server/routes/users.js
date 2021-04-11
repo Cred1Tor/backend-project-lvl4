@@ -71,7 +71,7 @@ export default (app) => {
         return reply;
       } catch {
         req.flash('error', i18next.t('flash.users.delete.error'));
-        reply.render('users/index');
+        reply.redirect(app.reverse('users'));
         return reply;
       }
     });
