@@ -84,6 +84,7 @@ module.exports = {
         createdAt: 'Дата создания',
         actions: 'Действия',
         buttons: {
+          new: 'Создать статус',
           edit: 'Редактировать',
           delete: 'Удалить',
         },
