@@ -67,6 +67,7 @@ module.exports = {
         email: 'Email',
         createdAt: 'Дата создания',
         actions: 'Действия',
+        noUsers: 'Нет пользователей :(',
         buttons: {
           edit: 'Редактировать',
           delete: 'Удалить',
@@ -89,6 +90,7 @@ module.exports = {
         name: 'Наименование',
         createdAt: 'Дата создания',
         actions: 'Действия',
+        noStatuses: 'Не найдено ни одного статуса, попробуйте создать новый',
         buttons: {
           new: 'Создать статус',
           edit: 'Редактировать',

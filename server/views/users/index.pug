@@ -1,19 +1,22 @@
 extends ../layouts/application.pug
 
 block content
-  table.table.table-striped
-    thead
-      tr
-        th= t('views.users.id')
-        th= t('views.users.email')
-        th= t('views.users.createdAt')
-        th= t('views.users.actions')
-    tbody
-      each user in users
+  if users.length > 0
+    table.table.table-striped
+      thead
         tr
-          td= user.id
-          td= user.email
-          td= formatDate(user.createdAt)
-          td
-            a(href=`users/${user.id}/edit`)= t('views.users.buttons.edit')
-            +buttonTo(`users/${user.id}`, 'delete')(value=t('views.users.buttons.delete'))
+          th= t('views.users.id')
+          th= t('views.users.email')
+          th= t('views.users.createdAt')
+          th= t('views.users.actions')
+      tbody
+        each user in users
+          tr
+            td= user.id
+            td= user.email
+            td= formatDate(user.createdAt)
+            td
+              a(href=`users/${user.id}/edit`)= t('views.users.buttons.edit')
+              +buttonTo(`users/${user.id}`, 'delete')(value=t('views.users.buttons.delete'))
+  else
+    p= t('views.users.noUsers')
