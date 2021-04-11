@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import getApp from '../server/index.js';
 import encrypt from '../server/lib/secure.js';
-import { getTestData, prepareData } from './helpers/index.js';
+import { getTestData, prepareData, signIn } from './helpers/index.js';
 
 describe('test users CRUD', () => {
   let app;
@@ -63,17 +63,7 @@ describe('test users CRUD', () => {
   });
 
   it('update', async () => {
-    const responseSignIn = await app.inject({
-      method: 'POST',
-      url: app.reverse('session'),
-      payload: {
-        data: testData.users.existing,
-      },
-    });
-
-    const [sessionCookie] = responseSignIn.cookies;
-    const { name, value } = sessionCookie;
-    const cookie = { [name]: value };
+    const cookie = await signIn(app, testData.users.existing);
     const { id } = await models.user.query().findOne({ email: testData.users.existing.email });
     const params = testData.users.new;
 
@@ -96,17 +86,7 @@ describe('test users CRUD', () => {
   });
 
   it('delete', async () => {
-    const responseSignIn = await app.inject({
-      method: 'POST',
-      url: app.reverse('session'),
-      payload: {
-        data: testData.users.existing,
-      },
-    });
-
-    const [sessionCookie] = responseSignIn.cookies;
-    const { name, value } = sessionCookie;
-    const cookie = { [name]: value };
+    const cookie = await signIn(app, testData.users.existing);
     const { id } = await models.user.query().findOne({ email: testData.users.existing.email });
 
     const responseDelete = await app.inject({
