@@ -1,12 +1,13 @@
 // @ts-check
 
 import getApp from '../server/index.js';
-import { getTestData, prepareData } from './helpers/index.js';
+import { getTestData, prepareData, signIn } from './helpers/index.js';
 
 describe('test statuses CRUD', () => {
   let app;
   let knex;
   let models;
+  let cookie;
   const testData = getTestData();
 
   beforeAll(async () => {
@@ -21,12 +22,23 @@ describe('test statuses CRUD', () => {
     // и заполняем БД тестовыми данными
     await knex.migrate.latest();
     await prepareData(app);
+    cookie = await signIn(app, testData.users.existing);
+  });
+
+  it('unauthorized', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: app.reverse('statuses'),
+    });
+
+    expect(response.statusCode).toBe(401);
   });
 
   it('index', async () => {
     const response = await app.inject({
       method: 'GET',
       url: app.reverse('statuses'),
+      cookies: cookie,
     });
 
     expect(response.statusCode).toBe(200);
@@ -36,6 +48,7 @@ describe('test statuses CRUD', () => {
     const response = await app.inject({
       method: 'GET',
       url: app.reverse('newStatus'),
+      cookies: cookie,
     });
 
     expect(response.statusCode).toBe(200);
@@ -49,6 +62,7 @@ describe('test statuses CRUD', () => {
       payload: {
         data: params,
       },
+      cookies: cookie,
     });
 
     expect(response.statusCode).toBe(302);
@@ -57,17 +71,6 @@ describe('test statuses CRUD', () => {
   });
 
   it('update', async () => {
-    const responseSignIn = await app.inject({
-      method: 'POST',
-      url: app.reverse('session'),
-      payload: {
-        data: testData.users.existing,
-      },
-    });
-
-    const [sessionCookie] = responseSignIn.cookies;
-    const { name, value } = sessionCookie;
-    const cookie = { [name]: value };
     const { id } = await models.taskStatus.query().findOne({
       name: testData.statuses.existing.name,
     });
@@ -88,17 +91,6 @@ describe('test statuses CRUD', () => {
   });
 
   it('delete', async () => {
-    const responseSignIn = await app.inject({
-      method: 'POST',
-      url: app.reverse('session'),
-      payload: {
-        data: testData.users.existing,
-      },
-    });
-
-    const [sessionCookie] = responseSignIn.cookies;
-    const { name, value } = sessionCookie;
-    const cookie = { [name]: value };
     const { id } = await models.taskStatus.query().findOne({
       name: testData.statuses.existing.name,
     });
