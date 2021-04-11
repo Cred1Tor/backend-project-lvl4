@@ -6,7 +6,7 @@ export default (app) => {
   const authorize = (req, reply, done) => {
     if (!req.isAuthenticated()) {
       req.flash('error', i18next.t('flash.authError'));
-      reply.redirect(app.reverse('root'));
+      reply.code(401).redirect(app.reverse('root'));
       return done();
     }
     return done();
