@@ -25,15 +25,6 @@ describe('test statuses CRUD', () => {
     cookie = await signIn(app, testData.users.existing);
   });
 
-  it('unauthorized', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: app.reverse('statuses'),
-    });
-
-    expect(response.statusCode).toBe(401);
-  });
-
   it('index', async () => {
     const response = await app.inject({
       method: 'GET',
