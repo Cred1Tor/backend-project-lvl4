@@ -54,7 +54,7 @@ export default (app) => {
         const updatedStatus = await app.objection.models.taskStatus.fromJson(req.body.data);
         await status.$query().patch(updatedStatus);
         req.flash('info', i18next.t('flash.statuses.edit.success'));
-        reply.redirect(app.reverse('root'));
+        reply.redirect(app.reverse('statuses'));
         return reply;
       } catch (data) {
         req.flash('error', i18next.t('flash.statuses.edit.error'));
