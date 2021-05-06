@@ -2,7 +2,6 @@
   {
     "name": "add tests",
     "status": "assigned",
-    "assignedUser": "lawrence.kulas87@outlook.com",
     "description": "write tests for tasks CRUD"
   }
 ]
