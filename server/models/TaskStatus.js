@@ -27,7 +27,7 @@ export default class TaskStatus extends unique(BaseModel) {
       modelClass: 'Task',
       join: {
         from: 'statuses.id',
-        to: 'tasks.StatusId',
+        to: 'tasks.statusId',
       },
     },
   };
