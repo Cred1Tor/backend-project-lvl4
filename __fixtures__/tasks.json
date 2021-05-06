@@ -1,7 +1,8 @@
 [
   {
     "name": "add tests",
-    "status": "assigned",
+    "statusId": 2,
+    "assignedUserId": 2,
     "description": "write tests for tasks CRUD"
   }
 ]
