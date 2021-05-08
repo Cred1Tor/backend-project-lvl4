@@ -65,7 +65,7 @@ describe('test tasks CRUD', () => {
     const { id } = await models.task.query().findOne({
       name: testData.tasks.existing.name,
     });
-    const params = testData.statuses.new;
+    const params = testData.tasks.new;
 
     const responseUpdate = await app.inject({
       method: 'PATCH',
@@ -83,7 +83,7 @@ describe('test tasks CRUD', () => {
 
   it('delete', async () => {
     const { id } = await models.task.query().findOne({
-      name: testData.statuses.existing.name,
+      name: testData.tasks.existing.name,
     });
 
     const responseDelete = await app.inject({
