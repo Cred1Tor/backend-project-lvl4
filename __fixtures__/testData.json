@@ -20,6 +20,8 @@
   "tasks": {
     "new": {
       "name": "add db table for tasks",
+      "statusId": 2,
+      "assignedUserId": 2,
       "description": "add migration file, make relations to user and status tables"
     },
     "existing": {
