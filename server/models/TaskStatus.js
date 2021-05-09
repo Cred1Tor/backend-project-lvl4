@@ -21,14 +21,16 @@ export default class TaskStatus extends unique(BaseModel) {
     };
   }
 
-  static relationMappings: {
-    tasks: {
-      relation: BaseModel.HasManyRelation,
-      modelClass: 'Task',
-      join: {
-        from: 'statuses.id',
-        to: 'tasks.statusId',
+  static get relationMappings() {
+    return {
+      tasks: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: 'Task',
+        join: {
+          from: 'statuses.id',
+          to: 'tasks.statusId',
+        },
       },
-    },
-  };
+    };
+  }
 }

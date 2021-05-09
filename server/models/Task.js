@@ -24,22 +24,24 @@ export default class Task extends unique(BaseModel) {
     };
   }
 
-  static relationMappings: {
-    assignedUser: {
-      relation: BaseModel.BelongsToOneRelation,
-      modelClass: 'User',
-      join: {
-        from: 'tasks.assignedUserId',
-        to: 'users.id',
+  static get relationMappings() {
+    return {
+      assignedUser: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: 'User',
+        join: {
+          from: 'tasks.assignedUserId',
+          to: 'users.id',
+        },
       },
-    },
-    status: {
-      relation: BaseModel.BelongsToOneRelation,
-      modelClass: 'TaskStatus',
-      join: {
-        from: 'tasks.statusId',
-        to: 'statuses.id',
+      status: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: 'TaskStatus',
+        join: {
+          from: 'tasks.statusId',
+          to: 'statuses.id',
+        },
       },
-    },
-  };
+    };
+  }
 }

@@ -32,14 +32,16 @@ export default class User extends unique(BaseModel) {
     return encrypt(password) === this.passwordDigest;
   }
 
-  static relationMappings: {
-    tasks: {
-      relation: BaseModel.HasManyRelation,
-      modelClass: 'Task',
-      join: {
-        from: 'users.id',
-        to: 'tasks.assignedUserId',
+  static get relationMappings() {
+    return {
+      tasks: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: 'Task',
+        join: {
+          from: 'users.id',
+          to: 'tasks.assignedUserId',
+        },
       },
-    },
-  };
+    };
+  }
 }
