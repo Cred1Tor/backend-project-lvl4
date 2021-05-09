@@ -54,7 +54,7 @@ export default (app) => {
       reply.render('tasks/edit', { task });
       return reply;
     })
-    .patch('/tasks/:id/edit', { name: 'editStatus', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
+    .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       try {
         const { statusName, assignedUserName } = req.body.data;
         const status = await app.objection.models.status.query().find({ name: statusName });
@@ -74,7 +74,7 @@ export default (app) => {
         return reply;
       }
     })
-    .delete('/tasks/:id', { name: 'deleteStatus', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
+    .delete('/tasks/:id', { name: 'deleteTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       try {
         await app.objection.models.task.query().deleteById(req.params.id);
         req.flash('info', i18next.t('flash.tasks.delete.success'));
