@@ -13,7 +13,7 @@ export default class Task extends unique(BaseModel) {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name', 'statusId'],
+      required: ['name'],
       properties: {
         id: { type: 'integer' },
         name: { type: 'string' },
