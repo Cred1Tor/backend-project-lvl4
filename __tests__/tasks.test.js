@@ -1,5 +1,6 @@
 // @ts-check
 
+import _ from 'lodash';
 import getApp from '../server/index.js';
 import { getTestData, prepareData, signIn } from './helpers/index.js';
 
@@ -58,7 +59,17 @@ describe('test tasks CRUD', () => {
 
     expect(response.statusCode).toBe(302);
     const task = await models.task.query().findOne({ name: params.name });
-    expect(task).toMatchObject(params);
+    const { statusName, assignedUserName } = params;
+    const { id: statusId } = await app.objection.models.taskStatus.query()
+      .findOne({ name: statusName });
+    const { id: assignedUserId } = await app.objection.models.user.query()
+      .findOne({ email: assignedUserName });
+    const data = {
+      ..._.omit(params, ['assignedUserName', 'statusName']),
+      statusId: statusId.toString(),
+      assignedUserId: assignedUserId.toString(),
+    };
+    expect(task).toMatchObject(data);
   });
 
   it('update', async () => {
@@ -78,7 +89,17 @@ describe('test tasks CRUD', () => {
 
     expect(responseUpdate.statusCode).toBe(302);
     const updatedTask = await models.task.query().findById(id);
-    expect(updatedTask).toMatchObject(params);
+    const { statusName, assignedUserName } = params;
+    const { id: statusId } = await app.objection.models.taskStatus.query()
+      .findOne({ name: statusName });
+    const { id: assignedUserId } = await app.objection.models.user.query()
+      .findOne({ email: assignedUserName });
+    const data = {
+      ..._.omit(params, ['assignedUserName', 'statusName']),
+      statusId: statusId.toString(),
+      assignedUserId: assignedUserId.toString(),
+    };
+    expect(updatedTask).toMatchObject(data);
   });
 
   it('delete', async () => {
