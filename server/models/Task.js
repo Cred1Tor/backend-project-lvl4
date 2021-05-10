@@ -1,11 +1,11 @@
 // @ts-check
 
-import objectionUnique from 'objection-unique';
+// import objectionUnique from 'objection-unique';
 import BaseModel from './BaseModel';
 
-const unique = objectionUnique({ fields: ['name'] });
+// const unique = objectionUnique({ fields: ['name'] });
 
-export default class Task extends unique(BaseModel) {
+export default class Task extends BaseModel {
   static get tableName() {
     return 'tasks';
   }
