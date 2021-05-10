@@ -1,6 +1,7 @@
 // @ts-check
 
 import i18next from 'i18next';
+import _ from 'lodash';
 
 export default (app) => {
   const authorize = (req, reply, done) => {
@@ -33,19 +34,20 @@ export default (app) => {
     .post('/tasks', { preValidation: authorize }, async (req, reply) => {
       try {
         const { statusName, assignedUserName } = req.body.data;
-        const status = await app.objection.models.status.query().find({ name: statusName });
+        const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
         const assignedUser = await app.objection.models.user.query()
-          .find({ name: assignedUserName });
-        const task = await app.objection.models.task.fromJson(req.body.data);
+          .findOne({ email: assignedUserName });
+        const data = _.omit(req.body.data, ['assignedUserName', 'statusName']);
+        const task = await app.objection.models.task.fromJson(data);
+        await app.objection.models.task.query().insert(task);
         await assignedUser.$relatedQuery('tasks').relate(task);
         await status.$relatedQuery('tasks').relate(task);
-        await app.objection.models.task.query().insert(task);
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
-      } catch ({ data }) {
+      } catch (err) {
         req.flash('error', i18next.t('flash.tasks.create.error'));
-        reply.render('tasks/new', { task: req.body.data, errors: data });
+        reply.render('tasks/new', { task: req.body.data, errors: err });
         return reply;
       }
     })
@@ -57,14 +59,15 @@ export default (app) => {
     .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       try {
         const { statusName, assignedUserName } = req.body.data;
-        const status = await app.objection.models.status.query().find({ name: statusName });
+        const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
         const assignedUser = await app.objection.models.user.query()
-          .find({ name: assignedUserName });
+          .findOne({ email: assignedUserName });
         const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-        const updatedTask = await app.objection.models.task.fromJson(req.body.data);
-        await assignedUser.$relatedQuery('tasks').relate(updatedTask);
-        await status.$relatedQuery('tasks').relate(updatedTask);
+        const data = _.omit(req.body.data, ['assignedUserName', 'statusName']);
+        const updatedTask = await app.objection.models.task.fromJson(data);
         await task.$query().patch(updatedTask);
+        await assignedUser.$relatedQuery('tasks').relate(task);
+        await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
