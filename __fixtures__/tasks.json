@@ -2,7 +2,8 @@
   {
     "name": "add tests",
     "statusId": 2,
-    "assignedUserId": 2,
+    "executorId": 2,
+    "creatorId": 1,
     "description": "write tests for tasks CRUD"
   }
 ]
