@@ -11,7 +11,14 @@ exports.up = (knex) => (
       .onDelete('SET NULL')
       .index();
 
-    table.string('assignedUserId')
+    table.string('creatorId')
+      .unsigned()
+      .references('id')
+      .inTable('users')
+      .onDelete('SET NULL')
+      .index();
+
+    table.string('executorId')
       .unsigned()
       .references('id')
       .inTable('users')
