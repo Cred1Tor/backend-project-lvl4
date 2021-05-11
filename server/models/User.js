@@ -34,12 +34,20 @@ export default class User extends unique(BaseModel) {
 
   static get relationMappings() {
     return {
-      tasks: {
+      createdTasks: {
         relation: BaseModel.HasManyRelation,
         modelClass: 'Task',
         join: {
           from: 'users.id',
-          to: 'tasks.assignedUserId',
+          to: 'tasks.creatorId',
+        },
+      },
+      assignedTasks: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: 'Task',
+        join: {
+          from: 'users.id',
+          to: 'tasks.executorId',
         },
       },
     };
