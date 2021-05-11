@@ -27,6 +27,14 @@ export default class Task extends BaseModel {
 
   static get relationMappings() {
     return {
+      creator: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: 'User',
+        join: {
+          from: 'tasks.creatorId',
+          to: 'users.id',
+        },
+      },
       executor: {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: 'User',
