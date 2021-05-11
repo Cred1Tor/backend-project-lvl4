@@ -13,12 +13,13 @@ export default class Task extends BaseModel {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name'],
+      required: ['name', 'statusId', 'creatorId'],
       properties: {
         id: { type: 'integer' },
         name: { type: 'string' },
         statusId: { type: 'integer' },
-        assignedUserId: { type: ['integer', 'null'] },
+        creatorId: { type: 'integer' },
+        executorId: { type: ['integer', 'null'] },
         description: { type: 'string' },
       },
     };
@@ -26,11 +27,11 @@ export default class Task extends BaseModel {
 
   static get relationMappings() {
     return {
-      assignedUser: {
+      executor: {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: 'User',
         join: {
-          from: 'tasks.assignedUserId',
+          from: 'tasks.executorId',
           to: 'users.id',
         },
       },
