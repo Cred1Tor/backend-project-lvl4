@@ -37,10 +37,12 @@ export default (app) => {
         const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
         const executor = await app.objection.models.user.query()
           .findOne({ email: executorName });
+        const creator = req.user;
         const data = _.omit(req.body.data, ['executorName', 'statusName']);
         const task = await app.objection.models.task.fromJson(data);
         await app.objection.models.task.query().insert(task);
-        await executor.$relatedQuery('tasks').relate(task);
+        await creator.$relateQuerry('createdTasks').relate(task);
+        await executor.$relatedQuery('assignedTasks').relate(task);
         await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
@@ -66,7 +68,7 @@ export default (app) => {
         const data = _.omit(req.body.data, ['executorName', 'statusName']);
         const updatedTask = await app.objection.models.task.fromJson(data);
         await task.$query().patch(updatedTask);
-        await executor.$relatedQuery('tasks').relate(task);
+        await executor.$relatedQuery('assignedTasks').relate(task);
         await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
