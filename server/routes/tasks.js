@@ -33,14 +33,14 @@ export default (app) => {
     })
     .post('/tasks', { preValidation: authorize }, async (req, reply) => {
       try {
-        const { statusName, assignedUserName } = req.body.data;
+        const { statusName, executorName } = req.body.data;
         const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
-        const assignedUser = await app.objection.models.user.query()
-          .findOne({ email: assignedUserName });
-        const data = _.omit(req.body.data, ['assignedUserName', 'statusName']);
+        const executor = await app.objection.models.user.query()
+          .findOne({ email: executorName });
+        const data = _.omit(req.body.data, ['executorName', 'statusName']);
         const task = await app.objection.models.task.fromJson(data);
         await app.objection.models.task.query().insert(task);
-        await assignedUser.$relatedQuery('tasks').relate(task);
+        await executor.$relatedQuery('tasks').relate(task);
         await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
@@ -58,15 +58,15 @@ export default (app) => {
     })
     .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       try {
-        const { statusName, assignedUserName } = req.body.data;
+        const { statusName, executorName } = req.body.data;
         const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
-        const assignedUser = await app.objection.models.user.query()
-          .findOne({ email: assignedUserName });
+        const executor = await app.objection.models.user.query()
+          .findOne({ email: executorName });
         const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-        const data = _.omit(req.body.data, ['assignedUserName', 'statusName']);
+        const data = _.omit(req.body.data, ['executorName', 'statusName']);
         const updatedTask = await app.objection.models.task.fromJson(data);
         await task.$query().patch(updatedTask);
-        await assignedUser.$relatedQuery('tasks').relate(task);
+        await executor.$relatedQuery('tasks').relate(task);
         await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
