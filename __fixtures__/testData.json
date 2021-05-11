@@ -21,7 +21,7 @@
     "new": {
       "name": "add db table for tasks",
       "statusName": "assigned",
-      "assignedUserName": "lawrence.kulas87@outlook.com",
+      "executorName": "lawrence.kulas87@outlook.com",
       "description": "add migration file, make relations to user and status tables"
     },
     "existing": {
