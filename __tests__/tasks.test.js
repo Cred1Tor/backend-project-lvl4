@@ -62,12 +62,12 @@ describe('test tasks CRUD', () => {
     const { statusName, executorName } = params;
     const { id: statusId } = await app.objection.models.taskStatus.query()
       .findOne({ name: statusName });
-    const { id: assignedUserId } = await app.objection.models.user.query()
+    const { id: executorId } = await app.objection.models.user.query()
       .findOne({ email: executorName });
     const data = {
       ..._.omit(params, ['executorName', 'statusName']),
       statusId: statusId.toString(),
-      assignedUserId: assignedUserId.toString(),
+      executorId: executorId.toString(),
     };
     expect(task).toMatchObject(data);
   });
@@ -92,12 +92,12 @@ describe('test tasks CRUD', () => {
     const { statusName, executorName } = params;
     const { id: statusId } = await app.objection.models.taskStatus.query()
       .findOne({ name: statusName });
-    const { id: assignedUserId } = await app.objection.models.user.query()
+    const { id: executorId } = await app.objection.models.user.query()
       .findOne({ email: executorName });
     const data = {
       ..._.omit(params, ['executorName', 'statusName']),
       statusId: statusId.toString(),
-      assignedUserId: assignedUserId.toString(),
+      executorId: executorId.toString(),
     };
     expect(updatedTask).toMatchObject(data);
   });
