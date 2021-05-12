@@ -13,16 +13,28 @@ export default class Task extends BaseModel {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name', 'statusId', 'creatorId'],
+      required: ['name', 'statusName', 'creatorName'],
       properties: {
         id: { type: 'integer' },
         name: { type: 'string' },
-        statusId: { type: 'integer' },
-        creatorId: { type: 'integer' },
-        executorId: { type: ['integer', 'null'] },
+        statusName: { type: 'string' },
+        creatorName: { type: 'string' },
+        executorName: { type: ['string', 'null'] },
         description: { type: 'string' },
       },
     };
+  }
+
+  set statusName(value) {
+    return this;
+  }
+
+  set creatorName(value) {
+    return this;
+  }
+
+  set executorName(value) {
+    return this;
   }
 
   static get relationMappings() {
