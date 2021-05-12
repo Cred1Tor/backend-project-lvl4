@@ -59,13 +59,13 @@ describe('test tasks CRUD', () => {
 
     expect(response.statusCode).toBe(302);
     const task = await models.task.query().findOne({ name: params.name });
-    const { statusName, assignedUserName } = params;
+    const { statusName, executorName } = params;
     const { id: statusId } = await app.objection.models.taskStatus.query()
       .findOne({ name: statusName });
     const { id: assignedUserId } = await app.objection.models.user.query()
-      .findOne({ email: assignedUserName });
+      .findOne({ email: executorName });
     const data = {
-      ..._.omit(params, ['assignedUserName', 'statusName']),
+      ..._.omit(params, ['executorName', 'statusName']),
       statusId: statusId.toString(),
       assignedUserId: assignedUserId.toString(),
     };
@@ -89,13 +89,13 @@ describe('test tasks CRUD', () => {
 
     expect(responseUpdate.statusCode).toBe(302);
     const updatedTask = await models.task.query().findById(id);
-    const { statusName, assignedUserName } = params;
+    const { statusName, executorName } = params;
     const { id: statusId } = await app.objection.models.taskStatus.query()
       .findOne({ name: statusName });
     const { id: assignedUserId } = await app.objection.models.user.query()
-      .findOne({ email: assignedUserName });
+      .findOne({ email: executorName });
     const data = {
-      ..._.omit(params, ['assignedUserName', 'statusName']),
+      ..._.omit(params, ['executorName', 'statusName']),
       statusId: statusId.toString(),
       assignedUserId: assignedUserId.toString(),
     };
