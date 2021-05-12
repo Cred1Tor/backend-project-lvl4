@@ -1,7 +1,6 @@
 // @ts-check
 
 import i18next from 'i18next';
-import _ from 'lodash';
 
 export default (app) => {
   const authorize = (req, reply, done) => {
@@ -37,11 +36,12 @@ export default (app) => {
         const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
         const executor = await app.objection.models.user.query()
           .findOne({ email: executorName });
-        const creator = req.user;
-        const data = _.omit(req.body.data, ['executorName', 'statusName']);
-        const task = await app.objection.models.task.fromJson(data);
-        await app.objection.models.task.query().insert(task);
-        await creator.$relateQuerry('createdTasks').relate(task);
+        const creator = await app.objection.models.user.query().findById(req.user.id);
+        const data = await app.objection.models.task.fromJson(
+          { ...req.body.data, creatorName: req.user.email },
+        );
+        const task = await app.objection.models.task.query().insert(data);
+        await creator.$relatedQuery('createdTasks').relate(task);
         await executor.$relatedQuery('assignedTasks').relate(task);
         await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.create.success'));
@@ -65,8 +65,7 @@ export default (app) => {
         const executor = await app.objection.models.user.query()
           .findOne({ email: executorName });
         const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-        const data = _.omit(req.body.data, ['executorName', 'statusName']);
-        const updatedTask = await app.objection.models.task.fromJson(data);
+        const updatedTask = await app.objection.models.task.fromJson({ ...req.body.data, creatorName: '' });
         await task.$query().patch(updatedTask);
         await executor.$relatedQuery('assignedTasks').relate(task);
         await status.$relatedQuery('tasks').relate(task);
