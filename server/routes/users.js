@@ -63,6 +63,12 @@ export default (app) => {
     })
     .delete('/users/:id', { name: 'deleteUser', preValidation: authorizeById }, async (req, reply) => {
       try {
+        const tasks = await app.objection.models.user.relatedQuery('assignedTasks').for(req.params.id);
+        if (tasks.length > 0) {
+          req.flash('error', i18next.t('flash.users.delete.hasTasks'));
+          reply.redirect(app.reverse('users'));
+          return reply;
+        }
         await app.objection.models.user.query().deleteById(req.params.id);
         req.logOut();
         req.flash('info', i18next.t('flash.users.delete.success'));
