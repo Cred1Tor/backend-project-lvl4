@@ -88,6 +88,7 @@ describe('test users CRUD', () => {
   it('delete', async () => {
     const cookie = await signIn(app, testData.users.existing);
     const { id } = await models.user.query().findOne({ email: testData.users.existing.email });
+    const assignedTasks = await models.user.relatedQuery('assignedTasks').for(id);
 
     const responseDelete = await app.inject({
       method: 'DELETE',
@@ -96,8 +97,23 @@ describe('test users CRUD', () => {
     });
 
     expect(responseDelete.statusCode).toBe(302);
-    const deletedUser = await models.user.query().findById(id);
-    expect(deletedUser).toBeUndefined();
+    let user = await models.user.query().findById(id);
+    expect(user).not.toBeUndefined();
+
+    await app.inject({
+      method: 'DELETE',
+      url: app.reverse('deleteTask', { id: `${assignedTasks[0].id}` }),
+      cookies: cookie,
+    });
+
+    await app.inject({
+      method: 'DELETE',
+      url: app.reverse('deleteUser', { id }),
+      cookies: cookie,
+    });
+
+    user = await models.user.query().findById(id);
+    expect(user).toBeUndefined();
   });
 
   afterEach(async () => {
