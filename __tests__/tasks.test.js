@@ -66,8 +66,8 @@ describe('test tasks CRUD', () => {
       .findOne({ email: executorName });
     const data = {
       ..._.omit(params, ['executorName', 'statusName']),
-      statusId: statusId.toString(),
-      executorId: executorId.toString(),
+      statusId,
+      executorId,
     };
     expect(task).toMatchObject(data);
   });
@@ -96,8 +96,8 @@ describe('test tasks CRUD', () => {
       .findOne({ email: executorName });
     const data = {
       ..._.omit(params, ['executorName', 'statusName']),
-      statusId: statusId.toString(),
-      executorId: executorId.toString(),
+      statusId,
+      executorId,
     };
     expect(updatedTask).toMatchObject(data);
   });
