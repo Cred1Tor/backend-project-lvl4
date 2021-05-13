@@ -26,9 +26,11 @@ export default (app) => {
       reply.render('tasks/index', { tasks });
       return reply;
     })
-    .get('/tasks/new', { name: 'newTask', preValidation: authorize }, (req, reply) => {
+    .get('/tasks/new', { name: 'newTask', preValidation: authorize }, async (req, reply) => {
       const task = new app.objection.models.task();
-      reply.render('tasks/new', { task });
+      const users = await app.objection.models.user.query();
+      const statuses = await app.objection.models.taskStatus.query();
+      reply.render('tasks/new', { task, users, statuses });
     })
     .post('/tasks', { preValidation: authorize }, async (req, reply) => {
       try {
@@ -49,7 +51,14 @@ export default (app) => {
         return reply;
       } catch (err) {
         req.flash('error', i18next.t('flash.tasks.create.error'));
-        reply.render('tasks/new', { task: req.body.data, errors: err });
+        const users = app.objection.models.user.query();
+        const statuses = app.objection.models.taskStatus.query();
+        reply.render('tasks/new', {
+          task: req.body.data,
+          users,
+          statuses,
+          errors: err,
+        });
         return reply;
       }
     })
