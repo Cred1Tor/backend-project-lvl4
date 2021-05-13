@@ -1,0 +1,20 @@
+extends ../layouts/application.pug
+
+block header
+  = t('views.tasks.new.creating')
+
+block content
+  +formFor()(action=route('tasks') method='post')
+    +input(task, 'name', t('views.tasks.new.name'), errors)(type="text")
+    +input(task, 'description', t('views.tasks.new.description'), errors)(type="text")
+    p
+      =t('views.tasks.new.status')
+      select(name='data[status]')
+      each status in statuses
+        option(value=status.name)= status.name
+    p
+      =t('views.tasks.new.executor')
+      select(name='data[executor]')
+      each user in users
+        option(value=user.email)= user.email
+    +submit(task)(value=t('views.tasks.new.submit'))

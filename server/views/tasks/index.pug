@@ -1,0 +1,29 @@
+extends ../layouts/application.pug
+
+block content
+  a(href=route('newTask'))= t('views.tasks.buttons.new')
+  if tasks.length > 0
+    table.table.table-striped
+      thead
+        tr
+          th= t('views.tasks.id')
+          th= t('views.tasks.name')
+          th= t('views.tasks.status')
+          th= t('views.tasks.creator')
+          th= t('views.tasks.executor')
+          th= t('views.tasks.createdAt')
+          th= t('views.tasks.actions')
+      tbody
+        each task in tasks
+          tr
+            td= task.id
+            td= task.name
+            td= task.status
+            td= task.creator
+            td= task.executor
+            td= formatDate(task.createdAt)
+            td
+              a(href=`tasks/${task.id}/edit`)= t('views.tasks.buttons.edit')
+              +buttonTo(`tasks/${task.id}`, 'delete')(value=t('views.tasks.buttons.delete'))
+  else
+    p= t('views.tasks.noTasks')
