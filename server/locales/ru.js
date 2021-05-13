@@ -123,6 +123,38 @@ module.exports = {
           name: 'Наименование',
         },
       },
+      tasks: {
+        id: 'ID',
+        name: 'Наименование',
+        description: 'Описание',
+        status: 'Статус',
+        creator: 'Создатель',
+        executor: 'Исполнитель',
+        createdAt: 'Дата создания',
+        actions: 'Действия',
+        noTasks: 'Нет задач',
+        buttons: {
+          new: 'Создать задачу',
+          edit: 'Редактировать',
+          delete: 'Удалить',
+        },
+        new: {
+          submit: 'Создать',
+          creating: 'Создание статуса',
+          name: 'Наименование',
+          description: 'Описание',
+          status: 'Статус',
+          executor: 'Исполнитель',
+        },
+        edit: {
+          submit: 'Изменить',
+          editing: 'Изменение задачи',
+          name: 'Наименование',
+          description: 'Описание',
+          status: 'Статус',
+          executor: 'Исполнитель',
+        },
+      },
       welcome: {
         index: {
           hello: 'Привет от Хекслета!',
