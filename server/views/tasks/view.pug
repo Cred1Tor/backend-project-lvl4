@@ -1,0 +1,26 @@
+extends ../layouts/application.pug
+
+block header
+  = task.name
+
+block content
+  p #{t('views.tasks.description')}: #{task.description}
+  table.table
+    thead
+    tbody
+      tr
+        td= t('views.tasks.creator')
+        td= task.creator
+      tr
+        td= t('views.tasks.executor')
+        td= task.executor
+      tr
+        td= t('views.tasks.status')
+        td= task.status
+      tr
+        td= t('views.tasks.createdAt')
+        td= formatDate(task.createdAt)
+
+
+  p: a(href=`tasks/${task.id}/edit`)= t('views.tasks.buttons.edit')
+  p: +buttonTo(`${task.id}`, 'delete')(value=t('views.tasks.buttons.delete'))
