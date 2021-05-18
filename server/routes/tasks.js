@@ -31,7 +31,6 @@ export default (app) => {
           executorName: (await app.objection.models.user.query().findById(task.executorId))?.email,
         }),
       ));
-      console.log(tasksView);
       reply.render('tasks/index', { tasks: tasksView });
       return reply;
     })
