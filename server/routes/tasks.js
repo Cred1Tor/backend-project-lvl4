@@ -35,6 +35,17 @@ export default (app) => {
       reply.render('tasks/index', { tasks: tasksView });
       return reply;
     })
+    .get('/tasks/:id', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
+      const task = await app.objection.models.task.query().findOne({ id: req.params.id });
+      const status = (await app.objection.models.taskStatus.query().findById(task.statusId)).name;
+      const creator = (await app.objection.models.user.query().findById(task.creatorId)).email;
+      const executor = (await app.objection.models.user.query().findById(task.executorId)).email;
+      const taskView = {
+        ...task, status, creator, executor,
+      };
+      reply.render('tasks/view', { task: taskView });
+      return reply;
+    })
     .get('/tasks/new', { name: 'newTask', preValidation: authorize }, async (req, reply) => {
       const task = new app.objection.models.task();
       const users = await app.objection.models.user.query();
