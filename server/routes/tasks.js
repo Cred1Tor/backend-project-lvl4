@@ -65,7 +65,7 @@ export default (app) => {
         const task = await app.objection.models.task.query().insert(data);
         await creator.$relatedQuery('createdTasks').relate(task);
         if (executor) {
-        await executor.$relatedQuery('assignedTasks').relate(task);
+          await executor.$relatedQuery('assignedTasks').relate(task);
         }
         await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.create.success'));
@@ -107,15 +107,19 @@ export default (app) => {
         const updatedTask = await app.objection.models.task.fromJson({ ...req.body.data, creatorName: '' });
         await task.$query().patch(updatedTask);
         if (executor) {
-        await executor.$relatedQuery('assignedTasks').relate(task);
+          await executor.$relatedQuery('assignedTasks').relate(task);
         }
         await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
-      } catch (data) {
+      } catch ({ data }) {
         req.flash('error', i18next.t('flash.tasks.edit.error'));
-        reply.render('tasks/edit', { task: req.body.data, errors: data });
+        const users = await app.objection.models.user.query();
+        const statuses = await app.objection.models.taskStatus.query();
+        reply.render('tasks/edit', {
+          task: req.body.data, users, statuses, errors: data,
+        });
         return reply;
       }
     })
