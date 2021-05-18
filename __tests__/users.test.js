@@ -63,8 +63,8 @@ describe('test users CRUD', () => {
   });
 
   it('update', async () => {
-    const cookie = await signIn(app, testData.users.existing);
-    const { id } = await models.user.query().findOne({ email: testData.users.existing.email });
+    const cookie = await signIn(app, testData.users.existing1);
+    const { id } = await models.user.query().findOne({ email: testData.users.existing1.email });
     const params = testData.users.new;
 
     const responseUpdate = await app.inject({
@@ -86,34 +86,35 @@ describe('test users CRUD', () => {
   });
 
   it('delete', async () => {
-    const cookie = await signIn(app, testData.users.existing);
-    const { id } = await models.user.query().findOne({ email: testData.users.existing.email });
-    const assignedTasks = await models.user.relatedQuery('assignedTasks').for(id);
+    const cookie1 = await signIn(app, testData.users.existing1);
+    const { id: id1 } = await models.user.query().findOne(
+      { email: testData.users.existing1.email },
+    );
 
-    const responseDelete = await app.inject({
+    const responseDelete1 = await app.inject({
       method: 'DELETE',
-      url: app.reverse('deleteUser', { id }),
-      cookies: cookie,
+      url: app.reverse('deleteUser', { id: id1 }),
+      cookies: cookie1,
     });
 
-    expect(responseDelete.statusCode).toBe(302);
-    let user = await models.user.query().findById(id);
-    expect(user).not.toBeUndefined();
+    expect(responseDelete1.statusCode).toBe(302);
+    const user1 = await models.user.query().findById(id1);
+    expect(user1).not.toBeUndefined();
 
-    await app.inject({
+    const cookie2 = await signIn(app, testData.users.existing2);
+    const { id: id2 } = await models.user.query().findOne(
+      { email: testData.users.existing2.email },
+    );
+
+    const responseDelete2 = await app.inject({
       method: 'DELETE',
-      url: app.reverse('deleteTask', { id: `${assignedTasks[0].id}` }),
-      cookies: cookie,
+      url: app.reverse('deleteUser', { id: id2 }),
+      cookies: cookie2,
     });
 
-    await app.inject({
-      method: 'DELETE',
-      url: app.reverse('deleteUser', { id }),
-      cookies: cookie,
-    });
-
-    user = await models.user.query().findById(id);
-    expect(user).toBeUndefined();
+    expect(responseDelete2.statusCode).toBe(302);
+    const user2 = await models.user.query().findById(id2);
+    expect(user2).toBeUndefined();
   });
 
   afterEach(async () => {
