@@ -28,7 +28,7 @@ describe('test session', () => {
       method: 'POST',
       url: app.reverse('session'),
       payload: {
-        data: testData.users.existing,
+        data: testData.users.existing1,
       },
     });
 

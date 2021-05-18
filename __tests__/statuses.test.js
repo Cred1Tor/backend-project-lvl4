@@ -22,7 +22,7 @@ describe('test statuses CRUD', () => {
     // и заполняем БД тестовыми данными
     await knex.migrate.latest();
     await prepareData(app);
-    cookie = await signIn(app, testData.users.existing);
+    cookie = await signIn(app, testData.users.existing1);
   });
 
   it('index', async () => {
