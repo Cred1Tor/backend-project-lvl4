@@ -1,0 +1,23 @@
+extends ../layouts/application.pug
+
+block header
+  = t('views.tasks.edit.editing')
+
+block content
+  +formFor()(action='edit' method='post')
+    input(type='hidden' name='_method' value='PATCH')
+    +input(task, 'name', t('views.tasks.edit.name'), errors)(type="text")
+    +input(task, 'description', t('views.tasks.edit.description'), errors)(type="text")
+    p= t('views.tasks.edit.status')
+    p
+      select(name='data[statusName]')
+        option
+        each status in statuses
+          option(value=status.name)= status.name
+    p= t('views.tasks.edit.executor')
+    p
+      select(name='data[executorName]')
+        option
+        each user in users
+          option(value=user.email)= user.email
+    +submit(task)(value=t('views.tasks.edit.submit'))
