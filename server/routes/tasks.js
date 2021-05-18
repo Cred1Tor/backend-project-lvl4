@@ -23,7 +23,16 @@ export default (app) => {
   app
     .get('/tasks', { name: 'tasks', preValidation: authorize }, async (req, reply) => {
       const tasks = await app.objection.models.task.query();
-      reply.render('tasks/index', { tasks });
+      const tasksView = await Promise.all(tasks.map(
+        async (task) => ({
+          ...task,
+          status: (await app.objection.models.taskStatus.query().findById(task.statusId)).name,
+          creator: (await app.objection.models.user.query().findById(task.creatorId)).email,
+          executor: (await app.objection.models.user.query().findById(task.executorId)).email,
+        }),
+      ));
+      console.log(tasksView);
+      reply.render('tasks/index', { tasks: tasksView });
       return reply;
     })
     .get('/tasks/new', { name: 'newTask', preValidation: authorize }, async (req, reply) => {
