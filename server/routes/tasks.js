@@ -88,11 +88,14 @@ export default (app) => {
       const task = await app.objection.models.task.query().findOne({ id: req.params.id });
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
-      const status = (await app.objection.models.taskStatus.query().findById(task.statusId))?.name;
-      const creator = (await app.objection.models.user.query().findById(task.creatorId))?.email;
-      const executor = (await app.objection.models.user.query().findById(task.executorId))?.email;
+      const statusName = (
+        await app.objection.models.taskStatus.query().findById(task.statusId)
+      )?.name;
+      const executorName = (
+        await app.objection.models.user.query().findById(task.executorId)
+      )?.email;
       const taskView = {
-        ...task, status, creator, executor,
+        ...task, statusName, executorName,
       };
       reply.render('tasks/edit', { task: taskView, users, statuses });
       return reply;
