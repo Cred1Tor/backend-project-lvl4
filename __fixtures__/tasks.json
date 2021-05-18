@@ -9,8 +9,8 @@
   {
     "name": "finish step",
     "statusId": 1,
-    "executorId": 1,
-    "creatorId": 1,
+    "executorId": 2,
+    "creatorId": 2,
     "description": "fix users.test"
   }
 ]
