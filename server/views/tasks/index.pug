@@ -18,9 +18,9 @@ block content
           tr
             td= task.id
             td: a(href=`tasks/${task.id}`)= task.name
-            td= task.status
-            td= task.creator
-            td= task.executor
+            td= task.statusName
+            td= task.creatorName
+            td= task.executorName
             td= formatDate(task.createdAt)
             td
               a(href=`tasks/${task.id}/edit`)= t('views.tasks.buttons.edit')

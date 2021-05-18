@@ -26,9 +26,9 @@ export default (app) => {
       const tasksView = await Promise.all(tasks.map(
         async (task) => ({
           ...task,
-          status: (await app.objection.models.taskStatus.query().findById(task.statusId))?.name,
-          creator: (await app.objection.models.user.query().findById(task.creatorId))?.email,
-          executor: (await app.objection.models.user.query().findById(task.executorId))?.email,
+          statusName: (await app.objection.models.taskStatus.query().findById(task.statusId))?.name,
+          creatorName: (await app.objection.models.user.query().findById(task.creatorId))?.email,
+          executorName: (await app.objection.models.user.query().findById(task.executorId))?.email,
         }),
       ));
       console.log(tasksView);
