@@ -73,7 +73,9 @@ export default (app) => {
     })
     .get('/tasks/:id/edit', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-      reply.render('tasks/edit', { task });
+      const users = await app.objection.models.user.query();
+      const statuses = await app.objection.models.taskStatus.query();
+      reply.render('tasks/edit', { task, users, statuses });
       return reply;
     })
     .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
