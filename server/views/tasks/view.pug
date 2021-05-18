@@ -22,5 +22,5 @@ block content
         td= formatDate(task.createdAt)
 
 
-  p: a(href=`tasks/${task.id}/edit`)= t('views.tasks.buttons.edit')
+  p: a(href=`${task.id}/edit`)= t('views.tasks.buttons.edit')
   p: +buttonTo(`${task.id}`, 'delete')(value=t('views.tasks.buttons.delete'))
