@@ -37,11 +37,15 @@ export default (app) => {
     })
     .get('/tasks/:id', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-      const status = (await app.objection.models.taskStatus.query().findById(task.statusId))?.name;
-      const creator = (await app.objection.models.user.query().findById(task.creatorId))?.email;
-      const executor = (await app.objection.models.user.query().findById(task.executorId))?.email;
+      const statusName = (
+        await app.objection.models.taskStatus.query().findById(task.statusId)
+      )?.name;
+      const creatorName = (await app.objection.models.user.query().findById(task.creatorId))?.email;
+      const executorName = (
+        await app.objection.models.user.query().findById(task.executorId)
+      )?.email;
       const taskView = {
-        ...task, status, creator, executor,
+        ...task, statusName, creatorName, executorName,
       };
       reply.render('tasks/view', { task: taskView });
       return reply;

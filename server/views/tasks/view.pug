@@ -10,13 +10,13 @@ block content
     tbody
       tr
         td= t('views.tasks.creator')
-        td= task.creator
+        td= task.creatorName
       tr
         td= t('views.tasks.executor')
-        td= task.executor
+        td= task.executorName
       tr
         td= t('views.tasks.status')
-        td= task.status
+        td= task.statusName
       tr
         td= t('views.tasks.createdAt')
         td= formatDate(task.createdAt)
