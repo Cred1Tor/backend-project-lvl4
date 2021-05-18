@@ -42,22 +42,29 @@ export default (app) => {
         const data = await app.objection.models.task.fromJson(
           { ...req.body.data, creatorName: req.user.email },
         );
+        console.log('lets go');
         const task = await app.objection.models.task.query().insert(data);
+        console.log('2');
+        console.log(await task.$query());
+        await task.$query().patch({ creatorId: 3 });
+        console.log('test done');
         await creator.$relatedQuery('createdTasks').relate(task);
+        console.log('3');
         await executor.$relatedQuery('assignedTasks').relate(task);
         await status.$relatedQuery('tasks').relate(task);
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
       } catch (err) {
+        console.log(err);
         req.flash('error', i18next.t('flash.tasks.create.error'));
-        const users = app.objection.models.user.query();
-        const statuses = app.objection.models.taskStatus.query();
+        const users = await app.objection.models.user.query();
+        const statuses = await app.objection.models.taskStatus.query();
         reply.render('tasks/new', {
           task: req.body.data,
           users,
           statuses,
-          errors: err,
+          errors: err.data,
         });
         return reply;
       }
