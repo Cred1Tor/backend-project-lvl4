@@ -4,21 +4,21 @@ exports.up = (knex) => (
     table.increments('id').primary();
     table.string('name');
 
-    table.integer('statusId')
+    table.integer('status_id')
       .unsigned()
       .references('id')
       .inTable('statuses')
       .onDelete('SET NULL')
       .index();
 
-    table.integer('creatorId')
+    table.integer('creator_id')
       .unsigned()
       .references('id')
       .inTable('users')
       .onDelete('SET NULL')
       .index();
-
-    table.integer('executorId')
+    
+    table.integer('executor_id')
       .unsigned()
       .references('id')
       .inTable('users')
