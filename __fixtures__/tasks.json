@@ -5,5 +5,12 @@
     "executorId": 2,
     "creatorId": 1,
     "description": "write tests for tasks CRUD"
+  },
+  {
+    "name": "finish step",
+    "statusId": 1,
+    "executorId": 1,
+    "creatorId": 2,
+    "description": "fix users.test"
   }
 ]
