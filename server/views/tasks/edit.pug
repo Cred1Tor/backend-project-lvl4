@@ -13,13 +13,13 @@ block content
       select(name='data[statusName]')
         option
         each status in statuses
-          - const currentStatus = status.name === task.status;
+          - const currentStatus = status.name === task.statusName;
           option(value=status.name selected=currentStatus ? true : false)= status.name
     p= t('views.tasks.edit.executor')
     p
       select(name='data[executorName]')
         option
         each user in users
-          - const currentExecutor = user.email === task.executor;
+          - const currentExecutor = user.email === task.executorName;
           option(value=user.email selected=currentExecutor ? true : false)= user.email
     +submit(task)(value=t('views.tasks.edit.submit'))
