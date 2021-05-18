@@ -131,11 +131,16 @@ export default (app) => {
       }
     })
     .delete('/tasks/:id', { name: 'deleteTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
-      try {
-        await app.objection.models.task.query().deleteById(req.params.id);
-        req.flash('info', i18next.t('flash.tasks.delete.success'));
-      } catch {
-        req.flash('error', i18next.t('flash.tasks.delete.error'));
+      const task = await app.objection.models.task.query().findById(req.params.id);
+      if (task.creatorId !== req.user.id) {
+        req.flash('error', i18next.t('flash.tasks.delete.unauthorized'));
+      } else {
+        try {
+          await task.$query().delete();
+          req.flash('info', i18next.t('flash.tasks.delete.success'));
+        } catch {
+          req.flash('error', i18next.t('flash.tasks.delete.error'));
+        }
       }
       reply.redirect(app.reverse('tasks'));
       return reply;
