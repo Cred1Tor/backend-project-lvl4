@@ -26,9 +26,9 @@ export default (app) => {
       const tasksView = await Promise.all(tasks.map(
         async (task) => ({
           ...task,
-          status: (await app.objection.models.taskStatus.query().findById(task.statusId)).name,
-          creator: (await app.objection.models.user.query().findById(task.creatorId)).email,
-          executor: (await app.objection.models.user.query().findById(task.executorId)).email,
+          status: (await app.objection.models.taskStatus.query().findById(task.statusId))?.name,
+          creator: (await app.objection.models.user.query().findById(task.creatorId))?.email,
+          executor: (await app.objection.models.user.query().findById(task.executorId))?.email,
         }),
       ));
       console.log(tasksView);
@@ -37,9 +37,9 @@ export default (app) => {
     })
     .get('/tasks/:id', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-      const status = (await app.objection.models.taskStatus.query().findById(task.statusId)).name;
-      const creator = (await app.objection.models.user.query().findById(task.creatorId)).email;
-      const executor = (await app.objection.models.user.query().findById(task.executorId)).email;
+      const status = (await app.objection.models.taskStatus.query().findById(task.statusId))?.name;
+      const creator = (await app.objection.models.user.query().findById(task.creatorId))?.email;
+      const executor = (await app.objection.models.user.query().findById(task.executorId))?.email;
       const taskView = {
         ...task, status, creator, executor,
       };
@@ -86,9 +86,9 @@ export default (app) => {
       const task = await app.objection.models.task.query().findOne({ id: req.params.id });
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
-      const status = (await app.objection.models.taskStatus.query().findById(task.statusId)).name;
-      const creator = (await app.objection.models.user.query().findById(task.creatorId)).email;
-      const executor = (await app.objection.models.user.query().findById(task.executorId)).email;
+      const status = (await app.objection.models.taskStatus.query().findById(task.statusId))?.name;
+      const creator = (await app.objection.models.user.query().findById(task.creatorId))?.email;
+      const executor = (await app.objection.models.user.query().findById(task.executorId))?.email;
       const taskView = {
         ...task, status, creator, executor,
       };
