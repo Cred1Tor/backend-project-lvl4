@@ -63,7 +63,7 @@ export default (app) => {
       }
     })
     .delete('/statuses/:id', { name: 'deleteStatus', preValidation: [authorize, verifyStatusId] }, async (req, reply) => {
-      const status = await app.objection.models.status.query().findById(req.params.id);
+      const status = await app.objection.models.taskStatus.query().findById(req.params.id);
       const tasks = await status.$relatedQuery('tasks');
       if (tasks.length > 0) {
         req.flash('error', i18next.t('flash.statuses.delete.hasTasks'));
