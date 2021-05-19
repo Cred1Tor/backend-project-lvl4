@@ -56,7 +56,7 @@ export default (app) => {
         req.flash('info', i18next.t('flash.statuses.edit.success'));
         reply.redirect(app.reverse('statuses'));
         return reply;
-      } catch (data) {
+      } catch ({ data }) {
         req.flash('error', i18next.t('flash.statuses.edit.error'));
         reply.render('statuses/edit', { status: req.body.data, errors: data });
         return reply;
