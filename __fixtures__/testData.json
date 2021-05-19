@@ -17,8 +17,11 @@
     "new": {
       "name": "paused"
     },
-    "existing": {
+    "existing1": {
       "name": "assigned"
+    },
+    "existing2": {
+      "name": "started"
     }
   },
   "tasks": {

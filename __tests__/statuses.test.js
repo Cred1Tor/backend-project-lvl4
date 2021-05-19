@@ -63,7 +63,7 @@ describe('test statuses CRUD', () => {
 
   it('update', async () => {
     const { id } = await models.taskStatus.query().findOne({
-      name: testData.statuses.existing.name,
+      name: testData.statuses.existing1.name,
     });
     const params = testData.statuses.new;
 
@@ -82,19 +82,33 @@ describe('test statuses CRUD', () => {
   });
 
   it('delete', async () => {
-    const { id } = await models.taskStatus.query().findOne({
-      name: testData.statuses.existing.name,
+    const { id: id1 } = await models.taskStatus.query().findOne({
+      name: testData.statuses.existing1.name,
     });
 
-    const responseDelete = await app.inject({
+    const responseDelete1 = await app.inject({
       method: 'DELETE',
-      url: app.reverse('deleteStatus', { id }),
+      url: app.reverse('deleteStatus', { id: id1 }),
       cookies: cookie,
     });
 
-    expect(responseDelete.statusCode).toBe(302);
-    const deletedStatus = await models.taskStatus.query().findById(id);
-    expect(deletedStatus).toBeUndefined();
+    expect(responseDelete1.statusCode).toBe(302);
+    const deletedStatus1 = await models.taskStatus.query().findById(id1);
+    expect(deletedStatus1).not.toBeUndefined();
+
+    const { id: id2 } = await models.taskStatus.query().findOne({
+      name: testData.statuses.existing2.name,
+    });
+
+    const responseDelete2 = await app.inject({
+      method: 'DELETE',
+      url: app.reverse('deleteStatus', { id: id2 }),
+      cookies: cookie,
+    });
+
+    expect(responseDelete2.statusCode).toBe(302);
+    const deletedStatus2 = await models.taskStatus.query().findById(id2);
+    expect(deletedStatus2).toBeUndefined();
   });
 
   afterEach(async () => {
