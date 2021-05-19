@@ -5,7 +5,7 @@ import BaseModel from './BaseModel';
 
 const unique = objectionUnique({ fields: ['name'] });
 
-export default class TaskStatus extends unique(BaseModel) {
+export default class Label extends unique(BaseModel) {
   static get tableName() {
     return 'labels';
   }
