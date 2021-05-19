@@ -31,5 +31,16 @@
     "existing": {
       "name": "add tests"
     }
+  },
+  "labels": {
+    "new": {
+      "name": "urgent"
+    },
+    "existing1": {
+      "name": "bug"
+    },
+    "existing2": {
+      "name": "refactoring"
+    }
   }
 }
