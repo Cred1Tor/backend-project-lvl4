@@ -9,4 +9,4 @@ exports.up = (knex) => (
   })
 );
 
-exports.down = (knex) => knex.schema.dropTable('statuses');
+exports.down = (knex) => knex.schema.dropTable('labels');
