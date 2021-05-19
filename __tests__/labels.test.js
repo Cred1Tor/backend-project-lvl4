@@ -63,7 +63,7 @@ describe('test labels CRUD', () => {
 
   it('update', async () => {
     const { id } = await models.label.query().findOne({
-      name: testData.labels.existing.name,
+      name: testData.labels.existing1.name,
     });
     const params = testData.labels.new;
 
@@ -82,19 +82,33 @@ describe('test labels CRUD', () => {
   });
 
   it('delete', async () => {
-    const { id } = await models.label.query().findOne({
-      name: testData.labels.existing.name,
+    const { id: id1 } = await models.label.query().findOne({
+      name: testData.labels.existing1.name,
     });
 
-    const responseDelete = await app.inject({
+    const responseDelete1 = await app.inject({
       method: 'DELETE',
-      url: app.reverse('deleteLabel', { id }),
+      url: app.reverse('deleteLabel', { id: id1 }),
       cookies: cookie,
     });
 
-    expect(responseDelete.statusCode).toBe(302);
-    const deletedLabel = await models.label.query().findById(id);
-    expect(deletedLabel).toBeUndefined();
+    expect(responseDelete1.statusCode).toBe(302);
+    const deletedLabel1 = await models.label.query().findById(id1);
+    expect(deletedLabel1).not.toBeUndefined();
+
+    const { id: id2 } = await models.label.query().findOne({
+      name: testData.labels.existing2.name,
+    });
+
+    const responseDelete2 = await app.inject({
+      method: 'DELETE',
+      url: app.reverse('deleteLabel', { id: id2 }),
+      cookies: cookie,
+    });
+
+    expect(responseDelete2.statusCode).toBe(302);
+    const deletedLabel2 = await models.label.query().findById(id2);
+    expect(deletedLabel2).toBeUndefined();
   });
 
   afterEach(async () => {
