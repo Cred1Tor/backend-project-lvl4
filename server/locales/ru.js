@@ -86,6 +86,7 @@ module.exports = {
         signOut: 'Выход',
         statuses: 'Статусы',
         tasks: 'Задачи',
+        labels: 'Метки',
       },
     },
     views: {
@@ -139,6 +140,28 @@ module.exports = {
         edit: {
           submit: 'Изменить',
           editing: 'Изменение статуса',
+          name: 'Наименование',
+        },
+      },
+      labels: {
+        id: 'ID',
+        name: 'Наименование',
+        createdAt: 'Дата создания',
+        actions: 'Действия',
+        noLabels: 'Не найдено ни одной метки',
+        buttons: {
+          new: 'Создать метку',
+          edit: 'Редактировать',
+          delete: 'Удалить',
+        },
+        new: {
+          submit: 'Создать',
+          creating: 'Создание метки',
+          name: 'Наименование',
+        },
+        edit: {
+          submit: 'Изменить',
+          editing: 'Изменение метки',
           name: 'Наименование',
         },
       },
