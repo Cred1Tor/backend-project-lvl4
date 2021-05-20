@@ -52,13 +52,18 @@ export default (app) => {
       return reply;
     })
     .get('/tasks/new', { name: 'newTask', preValidation: authorize }, async (req, reply) => {
-      const task = new app.objection.models.task();
-      const users = await app.objection.models.user.query();
-      const statuses = await app.objection.models.taskStatus.query();
-      const labels = await app.objection.models.label.query();
-      reply.render('tasks/new', {
-        task, users, statuses, labels,
-      });
+      try {
+        const task = new app.objection.models.task();
+        const users = await app.objection.models.user.query();
+        const statuses = await app.objection.models.taskStatus.query();
+        const labels = await app.objection.models.label.query();
+        reply.render('tasks/new', {
+          task, users, statuses, labels,
+        });
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
     })
     .post('/tasks', { preValidation: authorize }, async (req, reply) => {
       try {
