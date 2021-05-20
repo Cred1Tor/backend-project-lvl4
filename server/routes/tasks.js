@@ -53,14 +53,18 @@ export default (app) => {
     })
     .get('/tasks/new', { name: 'newTask', preValidation: authorize }, async (req, reply) => {
       try {
+        console.log('ZDAROVA');
         const task = new app.objection.models.task();
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
         const labels = await app.objection.models.label.query();
+        console.log('EVERYTHING LOADED');
         reply.render('tasks/new', {
           task, users, statuses, labels,
         });
+        console.log('RENDERED');
       } catch (e) {
+        console.log('BOOM');
         console.log(e);
         throw e;
       }
