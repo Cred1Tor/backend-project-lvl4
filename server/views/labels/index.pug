@@ -1,0 +1,23 @@
+extends ../layouts/application.pug
+
+block content
+  a(href=route('newLabel'))= t('views.labels.buttons.new')
+  if labels.length > 0
+    table.table.table-striped
+      thead
+        tr
+          th= t('views.labels.id')
+          th= t('views.labels.name')
+          th= t('views.labels.createdAt')
+          th= t('views.labels.actions')
+      tbody
+        each label in labels
+          tr
+            td= label.id
+            td= label.name
+            td= formatDate(label.createdAt)
+            td
+              a(href=`labels/${label.id}/edit`)= t('views.labels.buttons.edit')
+              +buttonTo(`labels/${label.id}`, 'delete')(value=t('views.labels.buttons.delete'))
+  else
+    p= t('views.labels.noLabels')
