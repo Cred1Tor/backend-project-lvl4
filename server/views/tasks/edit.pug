@@ -24,7 +24,7 @@ block content
           option(value=user.email selected=currentExecutor ? true : false)= user.email
     p= t('views.tasks.new.labels')
     p
-      select(name='data[labelNames]' multiple style="width: 300px")
+      select(name='data[labelNames]' multiple)
         each label in labels
           - const currentLabel = task.labelNames?.includes(label.name);
           option(value=label.name selected=currentLabel ? true : false)= label.name
