@@ -31,7 +31,7 @@ module.exports = {
       statuses: {
         create: {
           error: 'Не удалось создать статус',
-          success: 'Статус успешно а',
+          success: 'Статус успешно создан',
         },
         edit: {
           error: 'Не удалось изменить статус',
