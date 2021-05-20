@@ -137,17 +137,31 @@ export default (app) => {
     })
     .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       try {
-        const { statusName, executorName } = req.body.data;
+        const { statusName, executorName, labelNames } = req.body.data;
         const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
         const executor = await app.objection.models.user.query()
           .findOne({ email: executorName });
+        const labelNamesArr = [];
+        if (labelNames) {
+          if (Array.isArray(labelNames)) {
+            labelNamesArr.push(...labelNames);
+          } else {
+            labelNamesArr.push(labelNames);
+          }
+        }
+        const labels = await app.objection.models.label.query().whereIn('name', labelNamesArr);
         const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-        const updatedTask = await app.objection.models.task.fromJson({ ...req.body.data, creatorName: '' });
+        const updatedTask = await app.objection.models.task.fromJson({ ...req.body.data, labelNames: labelNamesArr, creatorName: '' });
         await task.$query().patch(updatedTask);
         if (executor) {
           await executor.$relatedQuery('assignedTasks').relate(task);
         }
         await status.$relatedQuery('tasks').relate(task);
+        if (labels.length > 0) {
+          labels.forEach(async (label) => {
+            await label.$relatedQuery('tasks').relate(task);
+          });
+        }
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
