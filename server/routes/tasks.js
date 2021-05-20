@@ -43,8 +43,10 @@ export default (app) => {
       const executorName = (
         await app.objection.models.user.query().findById(task.executorId)
       )?.email;
+      const labels = await task.$relatedQuery('labels');
+      const labelNames = labels.map(({ name }) => name);
       const taskView = {
-        ...task, statusName, creatorName, executorName,
+        ...task, statusName, creatorName, executorName, labelNames,
       };
       reply.render('tasks/view', { task: taskView });
       return reply;
@@ -53,17 +55,29 @@ export default (app) => {
       const task = new app.objection.models.task();
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
-      reply.render('tasks/new', { task, users, statuses });
+      const labels = await app.objection.models.label.query();
+      reply.render('tasks/new', {
+        task, users, statuses, labels,
+      });
     })
     .post('/tasks', { preValidation: authorize }, async (req, reply) => {
       try {
-        const { statusName, executorName } = req.body.data;
+        const { statusName, executorName, labelNames } = req.body.data;
         const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
         const executor = await app.objection.models.user.query()
           .findOne({ email: executorName });
         const creator = await app.objection.models.user.query().findById(req.user.id);
+        const labelNamesArr = [];
+        if (labelNames) {
+          if (Array.isArray(labelNames)) {
+            labelNamesArr.push(...labelNames);
+          } else {
+            labelNamesArr.push(labelNames);
+          }
+        }
+        const labels = await app.objection.models.label.query().whereIn('name', labelNamesArr);
         const data = await app.objection.models.task.fromJson(
-          { ...req.body.data, creatorName: req.user.email },
+          { ...req.body.data, creatorName: req.user.email, labelNames: labelNamesArr },
         );
         const task = await app.objection.models.task.query().insert(data);
         await creator.$relatedQuery('createdTasks').relate(task);
@@ -71,6 +85,11 @@ export default (app) => {
           await executor.$relatedQuery('assignedTasks').relate(task);
         }
         await status.$relatedQuery('tasks').relate(task);
+        if (labels.length > 0) {
+          labels.forEach(async (label) => {
+            await label.$relatedQuery('tasks').relate(task);
+          });
+        }
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
@@ -78,10 +97,12 @@ export default (app) => {
         req.flash('error', i18next.t('flash.tasks.create.error'));
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
+        const labels = await app.objection.models.label.query();
         reply.render('tasks/new', {
           task: req.body.data,
           users,
           statuses,
+          labels,
           errors: data,
         });
         return reply;
@@ -91,16 +112,22 @@ export default (app) => {
       const task = await app.objection.models.task.query().findOne({ id: req.params.id });
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
+      const labels = await app.objection.models.label.query();
       const statusName = (
         await app.objection.models.taskStatus.query().findById(task.statusId)
       )?.name;
       const executorName = (
         await app.objection.models.user.query().findById(task.executorId)
       )?.email;
+      const labelNames = (
+        await task.$relatedQuery('labels').select('name')
+      );
       const taskView = {
-        ...task, statusName, executorName,
+        ...task, statusName, executorName, labelNames,
       };
-      reply.render('tasks/edit', { task: taskView, users, statuses });
+      reply.render('tasks/edit', {
+        task: taskView, users, statuses, labels,
+      });
       return reply;
     })
     .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {

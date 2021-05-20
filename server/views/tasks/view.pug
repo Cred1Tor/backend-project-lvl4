@@ -20,6 +20,11 @@ block content
       tr
         td= t('views.tasks.createdAt')
         td= formatDate(task.createdAt)
+  p
+    b #{t('views.tasks.labels')}:
+    ul
+      each labelName in task.labelNames
+        li= labelName
 
 
   p: a(href=`${task.id}/edit`)= t('views.tasks.buttons.edit')

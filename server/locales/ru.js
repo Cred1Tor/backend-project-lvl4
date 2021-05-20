@@ -173,6 +173,7 @@ module.exports = {
         creator: 'Создатель',
         executor: 'Исполнитель',
         createdAt: 'Дата создания',
+        labels: 'Метки',
         actions: 'Действия',
         noTasks: 'Нет задач',
         buttons: {
@@ -187,6 +188,7 @@ module.exports = {
           description: 'Описание',
           status: 'Статус',
           executor: 'Исполнитель',
+          labels: 'Метки',
         },
         edit: {
           submit: 'Изменить',
@@ -195,6 +197,7 @@ module.exports = {
           description: 'Описание',
           status: 'Статус',
           executor: 'Исполнитель',
+          labels: 'Метки',
         },
       },
       welcome: {

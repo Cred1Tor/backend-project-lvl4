@@ -20,6 +20,12 @@ export default class Task extends BaseModel {
         statusName: { type: 'string', minLength: 1 },
         creatorName: { type: 'string' },
         executorName: { type: ['string', 'null'] },
+        labelNames: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+        },
         description: { type: 'string' },
       },
     };
@@ -34,6 +40,10 @@ export default class Task extends BaseModel {
   }
 
   set executorName(value) {
+    return this;
+  }
+
+  set labelNames(value) {
     return this;
   }
 
