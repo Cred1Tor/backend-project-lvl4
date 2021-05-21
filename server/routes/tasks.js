@@ -56,10 +56,9 @@ export default (app) => {
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();
-      reply.render('tasks/new', {
+      reply.send().render('tasks/new', {
         task, users, statuses, labels,
       });
-      reply.send();
     })
     .post('/tasks', { preValidation: authorize }, async (req, reply) => {
       try {
