@@ -13,19 +13,19 @@ block content
       select(name='data[statusName]')
         option
         each status in statuses
-          - const currentStatus = status.name === task.statusName;
+          - const currentStatus = status.name === task.status.name;
           option(value=status.name selected=currentStatus ? true : false)= status.name
     p= t('views.tasks.edit.executor')
     p
       select(name='data[executorName]')
         option
         each user in users
-          - const currentExecutor = user.email === task.executorName;
+          - const currentExecutor = user.email === (task.executor && task.executor.name);
           option(value=user.email selected=currentExecutor ? true : false)= user.email
     p= t('views.tasks.new.labels')
     p
       select(name='data[labelNames]' multiple)
         each label in labels
-          - const currentLabel = task.labelNames?.includes(label.name);
+          - const currentLabel = task.labels.some(({ name }) => name === label.name);
           option(value=label.name selected=currentLabel ? true : false)= label.name
     +submit(task)(value=t('views.tasks.edit.submit'))

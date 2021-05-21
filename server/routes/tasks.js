@@ -22,33 +22,15 @@ export default (app) => {
 
   app
     .get('/tasks', { name: 'tasks', preValidation: authorize }, async (req, reply) => {
-      const tasks = await app.objection.models.task.query();
-      const tasksView = await Promise.all(tasks.map(
-        async (task) => ({
-          ...task,
-          statusName: (await app.objection.models.taskStatus.query().findById(task.statusId))?.name,
-          creatorName: (await app.objection.models.user.query().findById(task.creatorId))?.email,
-          executorName: (await app.objection.models.user.query().findById(task.executorId))?.email,
-        }),
-      ));
-      reply.render('tasks/index', { tasks: tasksView });
+      const tasks = await app.objection.models.task.query()
+        .withGraphFetched('[creator, executor, status]');
+      reply.render('tasks/index', { tasks });
       return reply;
     })
     .get('/tasks/:id', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
-      const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-      const statusName = (
-        await app.objection.models.taskStatus.query().findById(task.statusId)
-      )?.name;
-      const creatorName = (await app.objection.models.user.query().findById(task.creatorId))?.email;
-      const executorName = (
-        await app.objection.models.user.query().findById(task.executorId)
-      )?.email;
-      const labels = await task.$relatedQuery('labels');
-      const labelNames = labels.map(({ name }) => name);
-      const taskView = {
-        ...task, statusName, creatorName, executorName, labelNames,
-      };
-      reply.render('tasks/view', { task: taskView });
+      const task = await app.objection.models.task.query().findOne({ id: req.params.id })
+        .withGraphFetched('[creator, executor, status, labels]');
+      reply.render('tasks/view', { task });
       return reply;
     })
     .get('/tasks/new', { name: 'newTask', preValidation: authorize }, async (req, reply) => {
@@ -110,23 +92,13 @@ export default (app) => {
       }
     })
     .get('/tasks/:id/edit', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
-      const task = await app.objection.models.task.query().findOne({ id: req.params.id });
+      const task = await app.objection.models.task.query().findOne({ id: req.params.id })
+        .withGraphFetched('[executor, status, labels]');
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();
-      const statusName = (
-        await app.objection.models.taskStatus.query().findById(task.statusId)
-      )?.name;
-      const executorName = (
-        await app.objection.models.user.query().findById(task.executorId)
-      )?.email;
-      const labelNames = (await task.$relatedQuery('labels'))
-        .map(({ name }) => name);
-      const taskView = {
-        ...task, statusName, executorName, labelNames,
-      };
       reply.render('tasks/edit', {
-        task: taskView, users, statuses, labels,
+        task, users, statuses, labels,
       });
       return reply;
     })

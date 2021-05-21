@@ -10,21 +10,21 @@ block content
     tbody
       tr
         td= t('views.tasks.creator')
-        td= task.creatorName
+        td= task.creator && task.creator.email
       tr
         td= t('views.tasks.executor')
-        td= task.executorName
+        td= task.executor && task.executor.email
       tr
         td= t('views.tasks.status')
-        td= task.statusName
+        td= task.status.name
       tr
         td= t('views.tasks.createdAt')
         td= formatDate(task.createdAt)
   p
     b #{t('views.tasks.labels')}:
     ul
-      each labelName in task.labelNames
-        li= labelName
+      each label in task.labels
+        li= label.name
 
 
   p: a(href=`${task.id}/edit`)= t('views.tasks.buttons.edit')
