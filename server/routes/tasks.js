@@ -55,20 +55,17 @@ export default (app) => {
       try {
         console.log('ZDAROVA');
         const task = new app.objection.models.task();
-        console.log(reply.statusCode);
         const users = await app.objection.models.user.query();
-        console.log(reply.statusCode);
         const statuses = await app.objection.models.taskStatus.query();
-        console.log(reply.statusCode);
         const labels = await app.objection.models.label.query();
-        console.log(reply.statusCode);
         console.log('EVERYTHING LOADED');
         reply.render('tasks/new', {
           task, users, statuses, labels,
         });
+        console.log(reply.statusCode);
         console.log('RENDERED');
         console.log(reply.log);
-        return reply;
+        await reply;
       } catch (e) {
         console.log('BOOM');
         console.log(e);
