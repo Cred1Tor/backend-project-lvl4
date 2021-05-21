@@ -120,9 +120,8 @@ export default (app) => {
       const executorName = (
         await app.objection.models.user.query().findById(task.executorId)
       )?.email;
-      const labelNames = (
-        await task.$relatedQuery('labels').select('name')
-      );
+      const labelNames = (await task.$relatedQuery('labels'))
+        .map(({ name }) => name);
       const taskView = {
         ...task, statusName, executorName, labelNames,
       };
