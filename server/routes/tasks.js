@@ -63,6 +63,7 @@ export default (app) => {
           task, users, statuses, labels,
         });
         console.log('RENDERED');
+        console.log(reply);
         return reply;
       } catch (e) {
         console.log('BOOM');
