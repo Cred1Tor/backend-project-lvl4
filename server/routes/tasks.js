@@ -159,10 +159,13 @@ export default (app) => {
         const task = await app.objection.models.task.query().findOne({ id: req.params.id });
         const updatedTask = await app.objection.models.task.fromJson({ ...req.body.data, labelNames: labelNamesArr, creatorName: '' });
         await task.$query().patch(updatedTask);
+        await task.$relatedQuery('executor').unrelate();
         if (executor) {
           await executor.$relatedQuery('assignedTasks').relate(task);
         }
+        await task.$relatedQuery('status').unrelate();
         await status.$relatedQuery('tasks').relate(task);
+        await task.$relatedQuery('labels').unrelate();
         if (labels.length > 0) {
           labels.forEach(async (label) => {
             await label.$relatedQuery('tasks').relate(task);
