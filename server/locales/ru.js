@@ -173,13 +173,16 @@ module.exports = {
         creator: 'Создатель',
         executor: 'Исполнитель',
         createdAt: 'Дата создания',
+        label: 'Метка',
         labels: 'Метки',
         actions: 'Действия',
         noTasks: 'Нет задач',
+        showOnlyMyTasks: 'Показывать только мои задачи',
         buttons: {
           new: 'Создать задачу',
           edit: 'Редактировать',
           delete: 'Удалить',
+          show: 'Показать',
         },
         new: {
           submit: 'Создать',

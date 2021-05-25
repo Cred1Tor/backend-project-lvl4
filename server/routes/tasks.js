@@ -22,9 +22,29 @@ export default (app) => {
 
   app
     .get('/tasks', { name: 'tasks', preValidation: authorize }, async (req, reply) => {
-      const tasks = await app.objection.models.task.query()
-        .withGraphFetched('[creator, executor, status]');
-      reply.render('tasks/index', { tasks });
+      const filter = req.query;
+      let tasks = await app.objection.models.task.query()
+        .withGraphFetched('[creator, executor, status, labels]');
+      if (filter?.statusName) {
+        tasks = tasks.filter((task) => task.status.name === filter.statusName);
+      }
+      if (filter?.executorName) {
+        tasks = tasks.filter((task) => task.executor?.email === filter.executorName);
+      }
+      if (filter?.labelName) {
+        tasks = tasks.filter(
+          (task) => task.labels?.some((label) => label.name === filter.labelName),
+        );
+      }
+      if (filter?.onlyMyTasks) {
+        tasks = tasks.filter((task) => task.creator.id === req.user.id);
+      }
+      const users = await app.objection.models.user.query();
+      const statuses = await app.objection.models.taskStatus.query();
+      const labels = await app.objection.models.label.query();
+      reply.render('tasks/index', {
+        tasks, users, statuses, labels, filter,
+      });
       return reply;
     })
     .get('/tasks/:id', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {

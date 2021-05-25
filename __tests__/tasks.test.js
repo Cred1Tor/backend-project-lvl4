@@ -36,6 +36,20 @@ describe('test tasks CRUD', () => {
     expect(response.statusCode).toBe(200);
   });
 
+  it('index filtered', async () => {
+    const filter = {
+      status: testData.statuses.existing1,
+    };
+    const response = await app.inject({
+      method: 'GET',
+      url: app.reverse('tasks'),
+      query: filter,
+      cookies: cookie,
+    });
+
+    expect(response.statusCode).toBe(200);
+  });
+
   it('new', async () => {
     const response = await app.inject({
       method: 'GET',
