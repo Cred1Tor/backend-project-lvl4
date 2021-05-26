@@ -123,7 +123,7 @@ const registerPlugins = (app) => {
     knexConfig: knexConfig[mode],
     models,
   });
-  app.register(rollbar.errorHandler());
+  // app.register(rollbar.errorHandler());
 };
 
 export default () => {
