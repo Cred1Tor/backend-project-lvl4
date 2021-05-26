@@ -14,6 +14,7 @@ import fastifySensible from 'fastify-sensible';
 import fastifyReverseRoutes from 'fastify-reverse-routes';
 import fastifyMethodOverride from 'fastify-method-override';
 import fastifyObjectionjs from 'fastify-objectionjs';
+import fastifyExpress from 'fastify-express';
 import qs from 'qs';
 import Pug from 'pug';
 import i18next from 'i18next';
@@ -90,7 +91,7 @@ const addHooks = (app) => {
   });
 };
 
-const registerPlugins = (app) => {
+const registerPlugins = async (app) => {
   app.register(fastifySensible);
   app.register(fastifyErrorPage);
   app.register(fastifyReverseRoutes.plugin);
@@ -123,19 +124,19 @@ const registerPlugins = (app) => {
     knexConfig: knexConfig[mode],
     models,
   });
-  app.setErrorHandler((err, req) => {
-    rollbar.error(err, req);
-  });
+
+  await app.register(fastifyExpress);
+  app.use(rollbar.errorHandler());
 };
 
-export default () => {
+export default async () => {
   const app = fastify({
     logger: {
       prettyPrint: isDevelopment,
     },
   });
 
-  registerPlugins(app);
+  await registerPlugins(app);
 
   setupLocalization();
   setUpViews(app);
