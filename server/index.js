@@ -17,6 +17,7 @@ import fastifyObjectionjs from 'fastify-objectionjs';
 import qs from 'qs';
 import Pug from 'pug';
 import i18next from 'i18next';
+import Rollbar from 'rollbar';
 import ru from './locales/ru.js';
 import webpackConfig from '../webpack.config.babel.js';
 
@@ -30,6 +31,12 @@ dotenv.config();
 const mode = process.env.NODE_ENV || 'development';
 const isProduction = mode === 'production';
 const isDevelopment = mode === 'development';
+
+const rollbar = new Rollbar({
+  accessToken: process.env.ROLLBAR_TOKEN,
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+});
 
 const setUpViews = (app) => {
   const { devServer } = webpackConfig;
@@ -116,6 +123,7 @@ const registerPlugins = (app) => {
     knexConfig: knexConfig[mode],
     models,
   });
+  app.register(rollbar.errorHandler());
 };
 
 export default () => {
