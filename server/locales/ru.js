@@ -186,7 +186,7 @@ module.exports = {
         },
         new: {
           submit: 'Создать',
-          creating: 'Создание статуса',
+          creating: 'Создание задачи',
           name: 'Наименование',
           description: 'Описание',
           status: 'Статус',
