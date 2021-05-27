@@ -124,12 +124,12 @@ const registerPlugins = (app) => {
     models,
   });
 
-  const rollbarHandler = rollbar.errorHandler();
-  // FIXME: fix when fastify 3 will be released, use middie for rollbar integration
-  app.setErrorHandler((err, req, res) => {
-    rollbarHandler(err, req, res, () => {});
-    req.log.error(err.message);
-  });
+  // const rollbarHandler = rollbar.errorHandler();
+  // // FIXME: fix when fastify 3 will be released, use middie for rollbar integration
+  // app.setErrorHandler((err, req, res) => {
+  //   rollbarHandler(err, req, res, () => {});
+  //   req.log.error(err.message);
+  // });
 };
 
 export default () => {
