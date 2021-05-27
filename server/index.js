@@ -14,7 +14,6 @@ import fastifySensible from 'fastify-sensible';
 import fastifyReverseRoutes from 'fastify-reverse-routes';
 import fastifyMethodOverride from 'fastify-method-override';
 import fastifyObjectionjs from 'fastify-objectionjs';
-import fastifyExpress from 'fastify-express';
 import qs from 'qs';
 import Pug from 'pug';
 import i18next from 'i18next';
@@ -125,18 +124,22 @@ const registerPlugins = async (app) => {
     models,
   });
 
-  await app.register(fastifyExpress);
-  app.use(rollbar.errorHandler());
+  const rollbarHandler = rollbar.errorHandler();
+  // FIXME: fix when fastify 3 will be released, use middie for rollbar integration
+  app.setErrorHandler((err, req, res) => {
+    rollbarHandler(err, req, res, () => {});
+    req.log.error(err.message);
+  });
 };
 
-export default async () => {
+export default () => {
   const app = fastify({
     logger: {
       prettyPrint: isDevelopment,
     },
   });
 
-  await registerPlugins(app);
+  registerPlugins(app);
 
   setupLocalization();
   setUpViews(app);
