@@ -90,7 +90,7 @@ const addHooks = (app) => {
   });
 };
 
-const registerPlugins = async (app) => {
+const registerPlugins = (app) => {
   app.register(fastifySensible);
   app.register(fastifyErrorPage);
   app.register(fastifyReverseRoutes.plugin);
