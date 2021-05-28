@@ -11,6 +11,7 @@ export default (app) => {
     .post('/session', { name: 'session' }, app.fp.authenticate('form', async (req, reply, err, user) => {
       console.log('------------------USER------------------');
       console.log(user);
+      console.log(`------ERROR------\n${err}`);
       if (err) {
         console.log('-------------ERROR---------------');
         console.log(err);
