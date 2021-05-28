@@ -17,6 +17,7 @@ export default (app) => {
         return app.httpErrors.internalServerError(err);
       }
       if (!user) {
+        console.log('---------- NO USER ------------');
         const signInForm = req.body.data;
         const errors = {
           email: [{ message: i18next.t('flash.session.create.error') }],
