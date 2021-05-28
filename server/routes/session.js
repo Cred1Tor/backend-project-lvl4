@@ -12,6 +12,7 @@ export default (app) => {
       console.log('------------------USER------------------');
       console.log(user);
       console.log(`------ERROR------\n${err}`);
+      console.log(`SIGN IN FORM\n${req.body.data}`);
       if (err) {
         console.log('-------------ERROR---------------');
         console.log(err);
