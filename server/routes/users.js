@@ -32,12 +32,9 @@ export default (app) => {
     .post('/users', async (req, reply) => {
       try {
         const user = await app.objection.models.user.fromJson(req.body.data);
-        console.log('----------user email---------');
-        console.log(user.email);
-        console.log('----------user password----------');
-        console.log(req.body.data.password);
-        console.log('---------salt---------');
-        console.log(user.passwordDigest);
+        console.log(`----------user email---------\n${user.email}\n
+        ----------user password----------\n${req.body.data.password}\n
+        ---------salt---------\n${user.passwordDigest}`);
         await app.objection.models.user.query().insert(user);
         req.flash('info', i18next.t('flash.users.create.success'));
         reply.redirect(app.reverse('root'));
