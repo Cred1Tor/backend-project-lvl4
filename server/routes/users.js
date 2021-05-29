@@ -42,9 +42,11 @@ export default (app) => {
         USERS
         ${await app.objection.models.user.query()}`);
         return reply;
-      } catch ({ data }) {
+      } catch (err) {
+        console.log('-------ERROR WHEN INSERTING USER-----------');
+        console.log(err);
         req.flash('error', i18next.t('flash.users.create.error'));
-        reply.render('users/new', { user: req.body.data, errors: data });
+        reply.render('users/new', { user: req.body.data, errors: err.data });
         return reply;
       }
     })
