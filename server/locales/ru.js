@@ -106,7 +106,7 @@ module.exports = {
         actions: 'Действия',
         noUsers: 'Нет пользователей :(',
         buttons: {
-          edit: 'Редактировать',
+          edit: 'Изменить',
           delete: 'Удалить',
         },
         new: {
