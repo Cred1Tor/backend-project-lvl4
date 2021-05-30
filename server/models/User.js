@@ -19,6 +19,8 @@ export default class User extends unique(BaseModel) {
       properties: {
         id: { type: 'integer' },
         email: { type: 'string', format: 'email' },
+        firstName: { type: 'string', minLength: 1 },
+        lastName: { type: 'string', minLength: 1 },
         password: { type: 'string', minLength: 3 },
       },
     };

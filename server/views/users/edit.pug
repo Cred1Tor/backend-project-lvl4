@@ -6,6 +6,8 @@ block header
 block content
   +formFor()(action='edit' method='post')
     input(type='hidden' name='_method' value='PATCH')
+    +input(user, 'firstName', t('views.users.edit.firstName'), errors)(type="text")
+    +input(user, 'lastName', t('views.users.edit.lastName'), errors)(type="text")
     +input(user, 'email', t('views.users.edit.email'), errors)(type="text")
     +input(user, 'password', t('views.users.edit.password'), errors)(type="password")
     +submit(user)(value=t('views.users.edit.submit'))

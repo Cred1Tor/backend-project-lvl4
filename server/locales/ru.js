@@ -100,6 +100,7 @@ module.exports = {
       },
       users: {
         id: 'ID',
+        fullName: 'Полное имя',
         email: 'Email',
         createdAt: 'Дата создания',
         actions: 'Действия',
@@ -111,12 +112,16 @@ module.exports = {
         new: {
           submit: 'Сохранить',
           signUp: 'Регистрация',
+          firstName: 'Имя',
+          lastName: 'Фамилия',
           email: 'Email',
           password: 'Пароль',
         },
         edit: {
           submit: 'Изменить',
           editing: 'Изменение пользователя',
+          firstName: 'Имя',
+          lastName: 'Фамилия',
           email: 'Email',
           password: 'Пароль',
         },
