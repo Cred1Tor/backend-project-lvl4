@@ -80,7 +80,7 @@ export default (app) => {
         await app.objection.models.user.query().deleteById(req.params.id);
         req.logOut();
         req.flash('info', i18next.t('flash.users.delete.success'));
-        reply.redirect(app.reverse('root'));
+        reply.redirect(app.reverse('users'));
         return reply;
       } catch {
         req.flash('error', i18next.t('flash.users.delete.error'));
