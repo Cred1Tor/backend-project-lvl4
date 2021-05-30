@@ -156,7 +156,7 @@ module.exports = {
         noLabels: 'Не найдено ни одной метки',
         buttons: {
           new: 'Создать метку',
-          edit: 'Редактировать',
+          edit: 'Изменить',
           delete: 'Удалить',
         },
         new: {
