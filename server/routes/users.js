@@ -61,7 +61,7 @@ export default (app) => {
         const updatedUser = await app.objection.models.user.fromJson(req.body.data);
         await user.$query().patch(updatedUser);
         req.flash('info', i18next.t('flash.users.edit.success'));
-        reply.redirect(app.reverse('root'));
+        reply.redirect(app.reverse('users'));
         return reply;
       } catch (data) {
         req.flash('error', i18next.t('flash.users.edit.error'));
