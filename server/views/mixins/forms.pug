@@ -22,6 +22,47 @@ mixin input(entity, propertyName, label, errors = {})
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
+mixin select(entity, propertyName, collection, label, errors = {})
+  - propertyErrors = _.get(errors, propertyName)
+  - classLine = 'form-control' + (_.isEmpty(errors) ? '' : ' is-invalid')
+  - inputId = getInputId(propertyName)
+  .form-group(class=(errors[propertyName] && 'has-danger'))
+    label(
+      for= inputId
+    )= label
+    select(
+      id= inputId
+      name=getInputName(propertyName)
+      class=classLine
+    )&attributes(attributes)
+      option
+      each item in collection
+        - const selectedOption = item.id === _.get(entity, [propertyName, 'id']);
+          option(value=item.id selected=selectedOption)= item.name
+    if !_.isEmpty(propertyErrors)
+      .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+
+mixin selectMultiple(entity, propertyName, collection, label, errors = {})
+  - propertyErrors = _.get(errors, propertyName)
+  - classLine = 'form-control' + (_.isEmpty(errors) ? '' : ' is-invalid')
+  - inputId = getInputId(propertyName)
+  .form-group(class=(errors[propertyName] && 'has-danger'))
+    label(
+      for= inputId
+    )= label
+    select(
+      id= inputId
+      name=getInputName(propertyName)
+      class=classLine
+      multiple
+    )&attributes(attributes)
+      option
+      each item in collection
+        - const selectedOption = entity[propertyName].some(({ id }) => id === item.id);
+          option(value=item.id selected=selectedOption)= item.name
+    if !_.isEmpty(propertyErrors)
+      .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
+
 mixin submit(form = null)
   .form-group
     input(class='btn btn-primary' type='submit')&attributes(attributes)
