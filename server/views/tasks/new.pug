@@ -7,24 +7,7 @@ block content
   +formFor()(action=route('tasks') method='post')
     +input(task, 'name', t('views.tasks.new.name'), errors)(type="text")
     +input(task, 'description', t('views.tasks.new.description'), errors)(type="text")
-    p= t('views.tasks.new.status')
-    p
-      select(name='data[statusName]')
-        option
-        each status in statuses
-          - const currentStatus = status.name === task.statusName;
-          option(value=status.name selected=currentStatus ? true : false)= status.name
-    p= t('views.tasks.new.executor')
-    p
-      select(name='data[executorName]')
-        option
-        each user in users
-          - const currentExecutor = user.email === task.executorName;
-          option(value=user.email selected=currentExecutor ? true : false)= user.email
-    p= t('views.tasks.new.labels')
-    p
-      select(name='data[labelNames]' multiple)
-        each label in labels
-          - const currentLabel = task.labelNames?.includes(label.name);
-          option(value=label.name selected=currentLabel ? true : false)= label.name
+    +select(task, 'statusId', statuses, t('views.tasks.edit.status'), errors)
+    +select(task, 'executorId', users, t('views.tasks.edit.executor'), errors)
+    +selectMultiple(task, 'labels', labels, t('views.tasks.edit.labels'), errors)
     +submit(task)(value=t('views.tasks.new.submit'))
