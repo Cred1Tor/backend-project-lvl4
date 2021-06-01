@@ -9,18 +9,10 @@ export default (app) => {
       reply.render('session/new', { signInForm });
     })
     .post('/session', { name: 'session' }, app.fp.authenticate('form', async (req, reply, err, user) => {
-      console.log('------------------USER------------------');
-      console.log(user);
-      console.log(`------ERROR------\n${err}`);
-      console.log('SIGN IN FORM');
-      console.log(req.body.data);
       if (err) {
-        console.log('-------------ERROR---------------');
-        console.log(err);
         return app.httpErrors.internalServerError(err);
       }
       if (!user) {
-        console.log('---------- NO USER ------------');
         const signInForm = req.body.data;
         const errors = {
           email: [{ message: i18next.t('flash.session.create.error') }],

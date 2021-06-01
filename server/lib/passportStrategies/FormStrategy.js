@@ -16,11 +16,6 @@ export default class FormStrategy extends Strategy {
     const password = _.get(request, 'body.data.password', null);
     const { models } = this.app.objection;
     const user = await models.user.query().findOne({ email });
-    console.log(`-------STRATEGY---------
-    EMAIL: ${email}
-    PASSWORD: ${password}`);
-    console.log('-------USER FROM STRATEGY---------');
-    console.log(user);
     if (user && user.verifyPassword(password)) {
       return this.success(user);
     }

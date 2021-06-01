@@ -1,6 +1,7 @@
 // @ts-check
 
 import i18next from 'i18next';
+import _ from 'lodash';
 
 export default (app) => {
   const authorize = (req, reply, done) => {
@@ -64,25 +65,22 @@ export default (app) => {
       return reply;
     })
     .post('/tasks', { preValidation: authorize }, async (req, reply) => {
+      const data = { ...req.body.data };
       try {
-        const { statusName, executorName, labelNames } = req.body.data;
-        const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
-        const executor = await app.objection.models.user.query()
-          .findOne({ email: executorName });
-        const creator = await app.objection.models.user.query().findById(req.user.id);
-        const labelNamesArr = [];
-        if (labelNames) {
-          if (Array.isArray(labelNames)) {
-            labelNamesArr.push(...labelNames);
-          } else {
-            labelNamesArr.push(labelNames);
-          }
+        data.labelIds = [];
+        if (data.labels) {
+          data.labelIds = _.concat(data.labels).map((labelId) => Number(labelId));
         }
-        const labels = await app.objection.models.label.query().whereIn('name', labelNamesArr);
-        const data = await app.objection.models.task.fromJson(
-          { ...req.body.data, creatorName: req.user.email, labelNames: labelNamesArr },
-        );
-        const task = await app.objection.models.task.query().insert(data);
+        data.statusId = data.statusId ? Number(data.statusId) : null;
+        data.executorId = data.executorId ? Number(data.executorId) : null;
+        data.creatorId = req.user.id;
+        const status = await app.objection.models.taskStatus.query().findById(data.statusId);
+        const executor = await app.objection.models.user.query()
+          .findById(data.executorId);
+        const creator = await app.objection.models.user.query().findById(data.creatorId);
+        const labels = await app.objection.models.label.query().whereIn('id', data.labelIds);
+        const dataParsed = await app.objection.models.task.fromJson(data);
+        const task = await app.objection.models.task.query().insert(dataParsed);
         await creator.$relatedQuery('createdTasks').relate(task);
         if (executor) {
           await executor.$relatedQuery('assignedTasks').relate(task);
@@ -96,17 +94,17 @@ export default (app) => {
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
-      } catch ({ data }) {
+      } catch (err) {
         req.flash('error', i18next.t('flash.tasks.create.error'));
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
         const labels = await app.objection.models.label.query();
         reply.render('tasks/new', {
-          task: req.body.data,
+          task: data,
           users,
           statuses,
           labels,
-          errors: data,
+          errors: err.data,
         });
         return reply;
       }
@@ -123,28 +121,26 @@ export default (app) => {
       return reply;
     })
     .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
+      const data = { ...req.body.data };
       try {
-        const { statusName, executorName, labelNames } = req.body.data;
-        const status = await app.objection.models.taskStatus.query().findOne({ name: statusName });
-        const executor = await app.objection.models.user.query()
-          .findOne({ email: executorName });
-        const labelNamesArr = [];
-        if (labelNames) {
-          if (Array.isArray(labelNames)) {
-            labelNamesArr.push(...labelNames);
-          } else {
-            labelNamesArr.push(labelNames);
-          }
+        data.labelIds = [];
+        if (data.labels) {
+          data.labelIds = _.concat(data.labels).map((labelId) => Number(labelId));
         }
-        const labels = await app.objection.models.label.query().whereIn('name', labelNamesArr);
+        data.statusId = data.statusId ? Number(data.statusId) : null;
+        data.executorId = data.executorId ? Number(data.executorId) : null;
+        const status = await app.objection.models.taskStatus.query().findById(data.statusId);
+        const executor = await app.objection.models.user.query()
+          .findById(data.executorId);
+        const labels = await app.objection.models.label.query().whereIn('id', data.labelIds);
         const task = await app.objection.models.task.query().findOne({ id: req.params.id });
-        const updatedTask = await app.objection.models.task.fromJson({ ...req.body.data, labelNames: labelNamesArr, creatorName: '' });
+        data.creatorId = task.creatorId;
+        const updatedTask = await app.objection.models.task.fromJson(data);
         await task.$query().patch(updatedTask);
         await task.$relatedQuery('executor').unrelate();
         if (executor) {
           await executor.$relatedQuery('assignedTasks').relate(task);
         }
-        await task.$relatedQuery('status').unrelate();
         await status.$relatedQuery('tasks').relate(task);
         await task.$relatedQuery('labels').unrelate();
         if (labels.length > 0) {
@@ -155,12 +151,13 @@ export default (app) => {
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
-      } catch ({ data }) {
+      } catch (err) {
         req.flash('error', i18next.t('flash.tasks.edit.error'));
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
+        const labels = await app.objection.models.label.query();
         reply.render('tasks/edit', {
-          task: req.body.data, users, statuses, errors: data,
+          task: data, users, statuses, labels, errors: err.data,
         });
         return reply;
       }

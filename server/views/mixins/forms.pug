@@ -37,7 +37,7 @@ mixin select(entity, propertyName, collection, label, errors = {})
     )&attributes(attributes)
       option
       each item in collection
-        - const selectedOption = item.id === _.get(entity, [propertyName, 'id']);
+        - const selectedOption = item.id === _.get(entity, propertyName);
           option(value=item.id selected=selectedOption)= item.name
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
@@ -57,8 +57,9 @@ mixin selectMultiple(entity, propertyName, collection, label, errors = {})
       multiple
     )&attributes(attributes)
       option
+      - const selectedItems = entity[propertyName] && _.concat(entity[propertyName]);
       each item in collection
-        - const selectedOption = entity[propertyName].some(({ id }) => id === item.id);
+        - const selectedOption = selectedItems && selectedItems.some(({ id }) => id === item.id);
           option(value=item.id selected=selectedOption)= item.name
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')

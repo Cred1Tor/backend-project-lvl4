@@ -13,17 +13,17 @@ export default class Task extends BaseModel {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['name', 'statusName', 'creatorName'],
+      required: ['name', 'statusId', 'creatorId'],
       properties: {
         id: { type: 'integer' },
         name: { type: 'string', minLength: 1 },
-        statusName: { type: 'string', minLength: 1 },
-        creatorName: { type: 'string' },
-        executorName: { type: ['string', 'null'] },
-        labelNames: {
+        statusId: { type: 'integer' },
+        creatorId: { type: 'integer' },
+        executorId: { type: ['integer', 'null'] },
+        labelIds: {
           type: 'array',
           items: {
-            type: 'string',
+            type: 'integer',
           },
         },
         description: { type: 'string' },
@@ -31,19 +31,7 @@ export default class Task extends BaseModel {
     };
   }
 
-  set statusName(value) {
-    return this;
-  }
-
-  set creatorName(value) {
-    return this;
-  }
-
-  set executorName(value) {
-    return this;
-  }
-
-  set labelNames(value) {
+  set labelIds(value) {
     return this;
   }
 
