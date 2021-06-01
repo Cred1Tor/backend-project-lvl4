@@ -17,7 +17,7 @@ block content
         option
         each user in users
           - const currentExecutor = user.email === filter?.executorName;
-          option(value=user.email selected=currentExecutor ? true : false)= user.email
+          option(value=user.email selected=currentExecutor ? true : false)= user.name
     p
       label(for='label')= t('views.tasks.label')
       select#label(name='labelName')
