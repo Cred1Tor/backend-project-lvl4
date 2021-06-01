@@ -46,8 +46,8 @@ block content
             td= task.id
             td: a(href=`tasks/${task.id}`)= task.name
             td= task.status.name
-            td= task.creator && task.creator.email
-            td= task.executor && task.executor.email
+            td= task.creator && task.creator.name
+            td= task.executor && task.executor.name
             td= formatDate(task.createdAt)
             td
               a(href=`tasks/${task.id}/edit`)= t('views.tasks.buttons.edit')

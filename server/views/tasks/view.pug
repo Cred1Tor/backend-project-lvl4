@@ -10,10 +10,10 @@ block content
     tbody
       tr
         td= t('views.tasks.creator')
-        td= task.creator && task.creator.email
+        td= task.creator && task.creator.name
       tr
         td= t('views.tasks.executor')
-        td= task.executor && task.executor.email
+        td= task.executor && task.executor.name
       tr
         td= t('views.tasks.status')
         td= task.status.name
