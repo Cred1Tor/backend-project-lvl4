@@ -67,9 +67,8 @@ export default (app) => {
     .post('/tasks', { preValidation: authorize }, async (req, reply) => {
       const data = { ...req.body.data };
       try {
-        data.labelIds = [];
         if (data.labels) {
-          data.labelIds = _.concat(data.labels).map((labelId) => Number(labelId));
+          data.labels = _.concat(data.labels).map((labelId) => Number(labelId));
         }
         data.statusId = data.statusId ? Number(data.statusId) : null;
         data.executorId = data.executorId ? Number(data.executorId) : null;
@@ -78,7 +77,7 @@ export default (app) => {
         const executor = await app.objection.models.user.query()
           .findById(data.executorId);
         const creator = await app.objection.models.user.query().findById(data.creatorId);
-        const labels = await app.objection.models.label.query().whereIn('id', data.labelIds);
+        const labels = await app.objection.models.label.query().whereIn('id', data.labels);
         const dataParsed = await app.objection.models.task.fromJson(data);
         const task = await app.objection.models.task.query().insert(dataParsed);
         await creator.$relatedQuery('createdTasks').relate(task);
@@ -125,14 +124,14 @@ export default (app) => {
       try {
         data.labelIds = [];
         if (data.labels) {
-          data.labelIds = _.concat(data.labels).map((labelId) => Number(labelId));
+          data.labels = _.concat(data.labels).map((labelId) => Number(labelId));
         }
         data.statusId = data.statusId ? Number(data.statusId) : null;
         data.executorId = data.executorId ? Number(data.executorId) : null;
         const status = await app.objection.models.taskStatus.query().findById(data.statusId);
         const executor = await app.objection.models.user.query()
           .findById(data.executorId);
-        const labels = await app.objection.models.label.query().whereIn('id', data.labelIds);
+        const labels = await app.objection.models.label.query().whereIn('id', data.labels);
         const task = await app.objection.models.task.query().findOne({ id: req.params.id });
         data.creatorId = task.creatorId;
         const updatedTask = await app.objection.models.task.fromJson(data);

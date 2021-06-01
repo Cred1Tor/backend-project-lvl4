@@ -59,7 +59,7 @@ mixin selectMultiple(entity, propertyName, collection, label, errors = {})
       option
       - const selectedItems = entity[propertyName] && _.concat(entity[propertyName]);
       each item in collection
-        - const selectedOption = selectedItems && selectedItems.some(({ id }) => id === item.id);
+        - const selectedOption = selectedItems && selectedItems.some((id) => id === item.id);
           option(value=item.id selected=selectedOption)= item.name
     if !_.isEmpty(propertyErrors)
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
