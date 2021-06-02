@@ -23,7 +23,9 @@ export default (app) => {
 
   app
     .get('/tasks', { name: 'tasks', preValidation: authorize }, async (req, reply) => {
+      console.log('-----FILTER-----');
       const filter = req.query;
+      console.log(filter);
       let tasks = await app.objection.models.task.query()
         .withGraphFetched('[creator, executor, status, labels]');
       if (filter?.status) {
