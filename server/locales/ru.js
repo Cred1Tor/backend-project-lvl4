@@ -185,7 +185,7 @@ module.exports = {
         showOnlyMyTasks: 'Показывать только мои задачи',
         buttons: {
           new: 'Создать задачу',
-          edit: 'Редактировать',
+          edit: 'Изменить',
           delete: 'Удалить',
           show: 'Показать',
         },
