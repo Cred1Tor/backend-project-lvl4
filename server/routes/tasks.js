@@ -23,11 +23,6 @@ export default (app) => {
 
   app
     .get('/tasks', { name: 'tasks', preValidation: authorize }, async (req, reply) => {
-      console.log('-----URL-----');
-      console.log(req.url);
-      console.log('------TASKS--------');
-      const tasksLog = await app.objection.models.task.query();
-      console.log(tasksLog);
       const filter = req.query;
       filter.status = filter.status ? Number(filter.status) : null;
       filter.executor = filter.executor ? Number(filter.executor) : null;
@@ -100,14 +95,10 @@ export default (app) => {
             await label.$relatedQuery('tasks').relate(task);
           });
         }
-        console.log('------TASK ADDED--------');
-        console.log(task);
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
       } catch (err) {
-        console.log(err);
-        console.log(data);
         req.flash('error', i18next.t('flash.tasks.create.error'));
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
