@@ -104,6 +104,8 @@ export default (app) => {
         reply.redirect(app.reverse('tasks'));
         return reply;
       } catch (err) {
+        console.log(err);
+        console.log(data);
         req.flash('error', i18next.t('flash.tasks.create.error'));
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
