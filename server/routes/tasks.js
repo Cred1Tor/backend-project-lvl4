@@ -26,18 +26,18 @@ export default (app) => {
       const filter = req.query;
       let tasks = await app.objection.models.task.query()
         .withGraphFetched('[creator, executor, status, labels]');
-      if (filter?.statusName) {
-        tasks = tasks.filter((task) => task.status.name === filter.statusName);
+      if (filter?.status) {
+        tasks = tasks.filter((task) => task.status.id === filter.status);
       }
-      if (filter?.executorName) {
-        tasks = tasks.filter((task) => task.executor?.email === filter.executorName);
+      if (filter?.executor) {
+        tasks = tasks.filter((task) => task.executor?.id === filter.executor);
       }
-      if (filter?.labelName) {
+      if (filter?.label) {
         tasks = tasks.filter(
-          (task) => task.labels?.some((label) => label.name === filter.labelName),
+          (task) => task.labels?.some((label) => label.id === filter.label),
         );
       }
-      if (filter?.onlyMyTasks) {
+      if (filter?.isCreatorUser) {
         tasks = tasks.filter((task) => task.creator.id === req.user.id);
       }
       const users = await app.objection.models.user.query();

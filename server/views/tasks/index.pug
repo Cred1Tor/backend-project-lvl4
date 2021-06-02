@@ -6,26 +6,26 @@ block content
   +formFor()(action=route('tasks') method='get')
     p
       label(for='status')= t('views.tasks.status')
-      select#status(name='statusName')
+      select#status(name='status')
         option
         each status in statuses
           - const currentStatus = status.name === filter?.statusName;
           option(value=status.name selected=currentStatus ? true : false)= status.name
     p
       label(for='executor')= t('views.tasks.executor')
-      select#executor(name='executorName')
+      select#executor(name='executor')
         option
         each user in users
           - const currentExecutor = user.email === filter?.executorName;
           option(value=user.email selected=currentExecutor ? true : false)= user.name
     p
       label(for='label')= t('views.tasks.label')
-      select#label(name='labelName')
+      select#label(name='label')
         option
         each label in labels
           - const currentLabel = label.name === filter?.labelName;
           option(value=label.name selected=currentLabel ? true : false)= label.name
-    input#onlyMyTasks(type='checkbox' name='onlyMyTasks' checked=filter && filter.onlyMyTasks)
+    input#onlyMyTasks(type='checkbox' name='isCreatorUser' checked=filter && filter.onlyMyTasks)
     label(for='onlyMyTasks')= t('views.tasks.showOnlyMyTasks')
     +submit()(value='Показать')
 
