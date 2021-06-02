@@ -77,6 +77,8 @@ export default (app) => {
       try {
         if (data.labels) {
           data.labels = _.concat(data.labels).map((labelId) => Number(labelId));
+        } else {
+          data.labels = [];
         }
         data.statusId = data.statusId ? Number(data.statusId) : null;
         data.executorId = data.executorId ? Number(data.executorId) : null;
