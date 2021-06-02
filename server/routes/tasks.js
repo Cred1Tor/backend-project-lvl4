@@ -23,9 +23,9 @@ export default (app) => {
 
   app
     .get('/tasks', { name: 'tasks', preValidation: authorize }, async (req, reply) => {
-      console.log('-----FILTER-----');
+      console.log('-----URL-----');
+      console.log(req.url);
       const filter = req.query;
-      console.log(filter);
       filter.status = filter.status ? Number(filter.status) : null;
       filter.executor = filter.executor ? Number(filter.executor) : null;
       filter.label = filter.label ? Number(filter.label) : null;
