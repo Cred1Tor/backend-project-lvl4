@@ -26,15 +26,18 @@ export default (app) => {
       console.log('-----FILTER-----');
       const filter = req.query;
       console.log(filter);
+      filter.status = filter.status ? Number(filter.status) : null;
+      filter.executor = filter.executor ? Number(filter.executor) : null;
+      filter.label = filter.label ? Number(filter.label) : null;
       let tasks = await app.objection.models.task.query()
         .withGraphFetched('[creator, executor, status, labels]');
-      if (filter?.status) {
+      if (filter.status) {
         tasks = tasks.filter((task) => task.status.id === filter.status);
       }
-      if (filter?.executor) {
+      if (filter.executor) {
         tasks = tasks.filter((task) => task.executor?.id === filter.executor);
       }
-      if (filter?.label) {
+      if (filter.label) {
         tasks = tasks.filter(
           (task) => task.labels?.some((label) => label.id === filter.label),
         );
