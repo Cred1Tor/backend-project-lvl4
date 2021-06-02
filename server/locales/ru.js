@@ -182,7 +182,7 @@ module.exports = {
         labels: 'Метки',
         actions: 'Действия',
         noTasks: 'Нет задач',
-        showOnlyMyTasks: 'Показывать только мои задачи',
+        showOnlyMyTasks: 'Только мои задачи',
         buttons: {
           new: 'Создать задачу',
           edit: 'Изменить',
