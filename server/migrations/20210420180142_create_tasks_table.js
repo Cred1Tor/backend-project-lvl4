@@ -1,4 +1,3 @@
-
 exports.up = (knex) => (
   knex.schema.createTable('tasks', (table) => {
     table.increments('id').primary();
@@ -17,7 +16,7 @@ exports.up = (knex) => (
       .inTable('users')
       .onDelete('SET NULL')
       .index();
-    
+
     table.integer('executor_id')
       .unsigned()
       .references('id')

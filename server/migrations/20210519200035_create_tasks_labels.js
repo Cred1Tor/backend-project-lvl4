@@ -2,7 +2,7 @@
 
 exports.up = (knex) => (
   knex.schema.createTable('tasks_labels', (table) => {
-    table.increments('id').primary()
+    table.increments('id').primary();
 
     table
       .integer('task_id')
@@ -10,7 +10,7 @@ exports.up = (knex) => (
       .references('id')
       .inTable('tasks')
       .onDelete('CASCADE')
-      .index()
+      .index();
 
     table
       .integer('label_id')
@@ -18,7 +18,7 @@ exports.up = (knex) => (
       .references('id')
       .inTable('labels')
       .onDelete('CASCADE')
-      .index()
+      .index();
   })
 );
 
