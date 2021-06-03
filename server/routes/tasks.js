@@ -24,6 +24,11 @@ export default (app) => {
   app
     .get('/tasks', { name: 'tasks', preValidation: authorize }, async (req, reply) => {
       const filter = req.query;
+      console.log('----------FILTER--------');
+      console.log(filter);
+      const tasksView = await app.objection.models.task.query();
+      console.log('------TASKS UNFILTERED-----');
+      console.log(tasksView);
       filter.status = filter.status ? Number(filter.status) : null;
       filter.executor = filter.executor ? Number(filter.executor) : null;
       filter.label = filter.label ? Number(filter.label) : null;
@@ -43,6 +48,8 @@ export default (app) => {
       if (filter?.isCreatorUser) {
         tasks = tasks.filter((task) => task.creator.id === req.user.id);
       }
+      console.log('------TASKS FILTERED-----');
+      console.log(tasks.map((task) => _.omit(task, ['creator', 'executor', 'status', 'labels'])));
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();
@@ -127,6 +134,8 @@ export default (app) => {
     .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
       const data = { ...req.body.data };
       try {
+        console.log(`-----UPDATING TASK: ${req.params.id}----`);
+        console.log(data);
         if (data.labels) {
           data.labels = _.concat(data.labels).map((labelId) => Number(labelId));
         } else {
@@ -142,6 +151,7 @@ export default (app) => {
         data.creatorId = task.creatorId;
         const updatedTask = await app.objection.models.task.fromJson(data);
         await task.$query().patch(updatedTask);
+        console.log('--------TASK UPDATED-------');
         await task.$relatedQuery('executor').unrelate();
         if (executor) {
           await executor.$relatedQuery('assignedTasks').relate(task);
@@ -153,10 +163,13 @@ export default (app) => {
             await label.$relatedQuery('tasks').relate(task);
           });
         }
+        console.log('---------RELATIONS UPDATED------');
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
       } catch (err) {
+        console.log('-------UPDATE ERROR-------');
+        console.log(err);
         req.flash('error', i18next.t('flash.tasks.edit.error'));
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
