@@ -7,7 +7,7 @@ block content
   +formFor()(action='edit' method='post')
     input(type='hidden' name='_method' value='PATCH')
     +input(task, 'name', t('views.tasks.edit.name'), errors)(type="text")
-    +input(task, 'description', t('views.tasks.edit.description'), errors)(type="text")
+    +textArea(task, 'description', t('views.tasks.edit.description'), errors)(type="text")
     +select(task, 'statusId', statuses, t('views.tasks.edit.status'), errors)
     +select(task, 'executorId', users, t('views.tasks.edit.executor'), errors)
     +selectMultiple(task, 'labels', labels, t('views.tasks.edit.labels'), errors)
