@@ -126,8 +126,12 @@ export default (app) => {
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();
+      const data = {
+        ...task,
+        labels: task.labels.map(({ id }) => id),
+      };
       reply.render('tasks/edit', {
-        task, users, statuses, labels,
+        task: data, users, statuses, labels,
       });
       return reply;
     })
