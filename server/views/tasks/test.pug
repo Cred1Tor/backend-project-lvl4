@@ -27,7 +27,7 @@ block content
           option(value=label.id selected=currentLabel ? true : false)= label.name
     input#data_isCreatorUser(type='checkbox' name='isCreatorUser' checked=filter && filter.isCreatorUser)
     label(for='data_isCreatorUser')= t('views.tasks.showOnlyMyTasks')
-    +submit()(value='Показать')
+    +submit(filter)(value='Показать')
 
   if tasks.length > 0
     table.table.table-striped
