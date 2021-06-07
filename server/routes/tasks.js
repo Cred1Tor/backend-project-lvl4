@@ -43,11 +43,11 @@ export default (app) => {
       // if (filter?.isCreatorUser) {
       //   tasks = tasks.filter((task) => task.creator.id === req.user.id);
       // }
-      const users = await app.objection.models.user.query();
-      const statuses = await app.objection.models.taskStatus.query();
-      const labels = await app.objection.models.label.query();
+      // const users = await app.objection.models.user.query();
+      // const statuses = await app.objection.models.taskStatus.query();
+      // const labels = await app.objection.models.label.query();
       reply.render('tasks/index', {
-        tasks, users, statuses, labels,
+        tasks,
       });
       return reply;
     })
