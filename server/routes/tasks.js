@@ -24,25 +24,25 @@ export default (app) => {
   app
     .get('/test', { name: 'test', preValidation: authorize }, async (req, reply) => {
       const filter = req.query;
-      // filter.status = filter.status ? Number(filter.status) : null;
-      // filter.executor = filter.executor ? Number(filter.executor) : null;
-      // filter.label = filter.label ? Number(filter.label) : null;
-      const tasks = await app.objection.models.task.query()
+      filter.status = filter.status ? Number(filter.status) : null;
+      filter.executor = filter.executor ? Number(filter.executor) : null;
+      filter.label = filter.label ? Number(filter.label) : null;
+      let tasks = await app.objection.models.task.query()
         .withGraphFetched('[creator, executor, status, labels]');
-      // if (filter.status) {
-      //   tasks = tasks.filter((task) => task.status.id === filter.status);
-      // }
-      // if (filter.executor) {
-      //   tasks = tasks.filter((task) => task.executor?.id === filter.executor);
-      // }
-      // if (filter.label) {
-      //   tasks = tasks.filter(
-      //     (task) => task.labels?.some((label) => label.id === filter.label),
-      //   );
-      // }
-      // if (filter?.isCreatorUser) {
-      //   tasks = tasks.filter((task) => task.creator.id === req.user.id);
-      // }
+      if (filter.status) {
+        tasks = tasks.filter((task) => task.status.id === filter.status);
+      }
+      if (filter.executor) {
+        tasks = tasks.filter((task) => task.executor?.id === filter.executor);
+      }
+      if (filter.label) {
+        tasks = tasks.filter(
+          (task) => task.labels?.some((label) => label.id === filter.label),
+        );
+      }
+      if (filter?.isCreatorUser) {
+        tasks = tasks.filter((task) => task.creator.id === req.user.id);
+      }
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();
