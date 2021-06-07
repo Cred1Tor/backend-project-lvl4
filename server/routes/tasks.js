@@ -23,7 +23,7 @@ export default (app) => {
 
   app
     .get('/test', { name: 'test', preValidation: authorize }, async (req, reply) => {
-      // const filter = req.query;
+      const filter = req.query;
       // filter.status = filter.status ? Number(filter.status) : null;
       // filter.executor = filter.executor ? Number(filter.executor) : null;
       // filter.label = filter.label ? Number(filter.label) : null;
@@ -47,7 +47,7 @@ export default (app) => {
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();
       reply.render('tasks/test', {
-        tasks, statuses, users, labels,
+        tasks, statuses, users, labels, filter,
       });
       return reply;
     })
