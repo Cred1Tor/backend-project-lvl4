@@ -73,16 +73,7 @@ describe('test tasks CRUD', () => {
 
     expect(response.statusCode).toBe(302);
     const task = await models.task.query().findOne({ name: params.name });
-    const { statusName, executorName } = params;
-    const { id: statusId } = await app.objection.models.taskStatus.query()
-      .findOne({ name: statusName });
-    const { id: executorId } = await app.objection.models.user.query()
-      .findOne({ email: executorName });
-    const data = {
-      ..._.omit(params, ['executorName', 'statusName']),
-      statusId,
-      executorId,
-    };
+    const data = _.omit(params, 'labels');
     expect(task).toMatchObject(data);
   });
 
@@ -103,16 +94,7 @@ describe('test tasks CRUD', () => {
 
     expect(responseUpdate.statusCode).toBe(302);
     const updatedTask = await models.task.query().findById(id);
-    const { statusName, executorName } = params;
-    const { id: statusId } = await app.objection.models.taskStatus.query()
-      .findOne({ name: statusName });
-    const { id: executorId } = await app.objection.models.user.query()
-      .findOne({ email: executorName });
-    const data = {
-      ..._.omit(params, ['executorName', 'statusName']),
-      statusId,
-      executorId,
-    };
+    const data = _.omit(params, 'labels');
     expect(updatedTask).toMatchObject(data);
   });
 
