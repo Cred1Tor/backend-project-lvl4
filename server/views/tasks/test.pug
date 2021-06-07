@@ -3,6 +3,32 @@ extends ../layouts/application.pug
 block content
   a(href=route('newTask'))= t('views.tasks.buttons.new')
 
+  //- +formFor()(action=route('tasks') method='get')
+  //-   p
+  //-     label(for='data_status')= t('views.tasks.status')
+  //-     select#data_status(name='status')
+  //-       option
+  //-       each status in statuses
+  //-         - const currentStatus = status.id === filter?.status;
+  //-         option(value=status.id selected=currentStatus ? true : false)= status.name
+  //-   p
+  //-     label(for='data_executor')= t('views.tasks.executor')
+  //-     select#data_executor(name='executor')
+  //-       option
+  //-       each user in users
+  //-         - const currentExecutor = user.id === filter?.executor;
+  //-         option(value=user.id selected=currentExecutor ? true : false)= user.name
+  //-   p
+  //-     label(for='data_label')= t('views.tasks.label')
+  //-     select#data_label(name='label')
+  //-       option
+  //-       each label in labels
+  //-         - const currentLabel = label.id === filter?.label;
+  //-         option(value=label.id selected=currentLabel ? true : false)= label.name
+  //-   input#data_isCreatorUser(type='checkbox' name='isCreatorUser' checked=filter && filter.isCreatorUser)
+  //-   label(for='data_isCreatorUser')= t('views.tasks.showOnlyMyTasks')
+  //-   +submit()(value='Показать')
+
   if tasks.length > 0
     table.table.table-striped
       thead

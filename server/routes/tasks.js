@@ -27,9 +27,8 @@ export default (app) => {
       // filter.status = filter.status ? Number(filter.status) : null;
       // filter.executor = filter.executor ? Number(filter.executor) : null;
       // filter.label = filter.label ? Number(filter.label) : null;
-      // const tasks = await app.objection.models.task.query()
-      //   .withGraphFetched('[creator, executor, status, labels]');
-      const tasks = [];
+      const tasks = await app.objection.models.task.query()
+        .withGraphFetched('[creator, executor, status, labels]');
       // if (filter.status) {
       //   tasks = tasks.filter((task) => task.status.id === filter.status);
       // }
@@ -44,12 +43,9 @@ export default (app) => {
       // if (filter?.isCreatorUser) {
       //   tasks = tasks.filter((task) => task.creator.id === req.user.id);
       // }
-      // const users = await app.objection.models.user.query();
-      // const statuses = await app.objection.models.taskStatus.query();
-      // const labels = await app.objection.models.label.query();
-      const users = [];
-      const statuses = [];
-      const labels = [];
+      const users = await app.objection.models.user.query();
+      const statuses = await app.objection.models.taskStatus.query();
+      const labels = await app.objection.models.label.query();
       reply.render('tasks/test', {
         tasks, statuses, users, labels,
       });
