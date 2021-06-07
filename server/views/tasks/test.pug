@@ -11,13 +11,13 @@ block content
     //-     each status in statuses
     //-       - const currentStatus = status.id === filter?.status;
     //-       option(value=status.id selected=currentStatus ? true : false)= status.name
-    //- p
-    //-   label(for='data_executor')= t('views.tasks.executor')
-    //-   select#data_executor(name='executor')
-    //-     option
-    //-     each user in users
-    //-       - const currentExecutor = user.id === filter?.executor;
-    //-       option(value=user.id selected=currentExecutor ? true : false)= user.name
+    p
+      label(for='data_executor')= t('views.tasks.executor')
+      select#data_executor(name='executor')
+        option
+        each user in users
+          - const currentExecutor = user.id === filter?.executor;
+          option(value=user.id selected=currentExecutor ? true : false)= user.name
     //- p
     //-   label(for='data_label')= t('views.tasks.label')
     //-   select#data_label(name='label')
