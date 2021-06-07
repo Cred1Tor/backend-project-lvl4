@@ -50,7 +50,7 @@ export default (app) => {
       const users = [];
       const statuses = [];
       const labels = [];
-      reply.render('tasks/index', {
+      reply.render('tasks/test', {
         tasks, statuses, users, labels,
       });
       return reply;
