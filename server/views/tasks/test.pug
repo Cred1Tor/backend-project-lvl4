@@ -4,13 +4,13 @@ block content
   a(href=route('newTask'))= t('views.tasks.buttons.new')
 
   +formFor()(action=route('tasks') method='get')
-    p
-      label(for='data_status')= t('views.tasks.status')
-      select#data_status(name='status')
-        option
-        each status in statuses
-          - const currentStatus = status.id === filter?.status;
-          option(value=status.id selected=currentStatus ? true : false)= status.name
+    //- p
+    //-   label(for='data_status')= t('views.tasks.status')
+    //-   select#data_status(name='status')
+    //-     option
+    //-     each status in statuses
+    //-       - const currentStatus = status.id === filter?.status;
+    //-       option(value=status.id selected=currentStatus ? true : false)= status.name
     //- p
     //-   label(for='data_executor')= t('views.tasks.executor')
     //-   select#data_executor(name='executor')
