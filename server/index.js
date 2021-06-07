@@ -126,6 +126,7 @@ const registerPlugins = (app) => {
 
   const rollbarHandler = rollbar.errorHandler();
   // FIXME: fix when fastify 3 will be released, use middie for rollbar integration
+  // эта шляпа не работает нифига
   app.setErrorHandler((err, req, res) => {
     rollbarHandler(err, req, res, () => {});
     req.log.error(err.message);
