@@ -26,16 +26,6 @@ describe('test tasks CRUD', () => {
     cookie = await signIn(app, testData.users.existing1);
   });
 
-  it('test', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: app.reverse('test'),
-      cookies: cookie,
-    });
-
-    expect(response.statusCode).toBe(200);
-  });
-
   it('index', async () => {
     const response = await app.inject({
       method: 'GET',
