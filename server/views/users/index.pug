@@ -3,7 +3,7 @@ extends ../layouts/application.pug
 block content
   if users.length > 0
     table.table.table-striped
-      thead
+      thead.table-dark
         tr
           th= t('views.users.id')
           th= t('views.users.fullName')
