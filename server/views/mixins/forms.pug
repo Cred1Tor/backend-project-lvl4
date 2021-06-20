@@ -81,7 +81,7 @@ mixin selectMultiple(entity, propertyName, collection, label, errors = {})
       .invalid-feedback= propertyErrors.map(({ message }) => message).join('. ')
 
 mixin submit(form = null)
-  .form-group
+  .form-group.mb-0
     input(class='btn btn-primary' type='submit')&attributes(attributes)
 
 mixin buttonTo(action, method)
