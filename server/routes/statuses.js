@@ -3,11 +3,11 @@
 import i18next from 'i18next';
 
 export default (app) => {
-  const verifyStatusId = async (req, reply) => {
+  const verifyStatusId = async (req, reply, next) => {
     const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
     if (!status) {
-      req.flash('error', i18next.t('flash.statuses.notFound'));
-      reply.redirect(app.reverse('statuses'));
+      const err = app.httpErrors.notFound('Status not found.');
+      next(err);
     }
   };
 
