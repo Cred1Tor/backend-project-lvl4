@@ -4,7 +4,7 @@ import i18next from 'i18next';
 
 export default (app) => {
   const authorizeById = async (req, reply, next) => {
-    const user = await app.objection.models.user.query().findOne({ id: req.params.id });
+    const user = await app.objection.models.user.query().findById(req.params.id);
     if (!user) {
       const err = app.httpErrors.notFound('User not found.');
       next(err);
@@ -41,13 +41,13 @@ export default (app) => {
       }
     })
     .get('/users/:id/edit', { preValidation: [app.authenticate, authorizeById] }, async (req, reply) => {
-      const user = await app.objection.models.user.query().findOne({ id: req.params.id });
+      const user = await app.objection.models.user.query().findById(req.params.id);
       reply.render('users/edit', { user });
       return reply;
     })
     .patch('/users/:id/edit', { name: 'editUser', preValidation: [app.authenticate, authorizeById] }, async (req, reply) => {
       try {
-        const user = await app.objection.models.user.query().findOne({ id: req.params.id });
+        const user = await app.objection.models.user.query().findById(req.params.id);
         const updatedUser = await app.objection.models.user.fromJson(req.body.data);
         await user.$query().patch(updatedUser);
         req.flash('info', i18next.t('flash.users.edit.success'));

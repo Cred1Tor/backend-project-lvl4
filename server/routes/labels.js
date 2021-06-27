@@ -4,7 +4,7 @@ import i18next from 'i18next';
 
 export default (app) => {
   const verifyLabelId = async (req, reply, next) => {
-    const label = await app.objection.models.label.query().findOne({ id: req.params.id });
+    const label = await app.objection.models.label.query().findById(req.params.id);
     if (!label) {
       const err = app.httpErrors.notFound('Label not found.');
       next(err);
@@ -35,13 +35,13 @@ export default (app) => {
       }
     })
     .get('/labels/:id/edit', { preValidation: [app.authenticate, verifyLabelId] }, async (req, reply) => {
-      const label = await app.objection.models.label.query().findOne({ id: req.params.id });
+      const label = await app.objection.models.label.query().findById(req.params.id);
       reply.render('labels/edit', { label });
       return reply;
     })
     .patch('/labels/:id/edit', { name: 'editLabel', preValidation: [app.authenticate, verifyLabelId] }, async (req, reply) => {
       try {
-        const label = await app.objection.models.label.query().findOne({ id: req.params.id });
+        const label = await app.objection.models.label.query().findById(req.params.id);
         const updatedLabel = await app.objection.models.label.fromJson(req.body.data);
         await label.$query().patch(updatedLabel);
         req.flash('info', i18next.t('flash.labels.edit.success'));

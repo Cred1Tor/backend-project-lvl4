@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 export default (app) => {
   const verifyTaskId = async (req, reply, next) => {
-    const task = await app.objection.models.task.query().findOne({ id: req.params.id });
+    const task = await app.objection.models.task.query().findById(req.params.id);
     if (!task) {
       const err = app.httpErrors.notFound('Label not found.');
       next(err);
@@ -43,7 +43,7 @@ export default (app) => {
       return reply;
     })
     .get('/tasks/:id', { preValidation: [app.authenticate, verifyTaskId] }, async (req, reply) => {
-      const task = await app.objection.models.task.query().findOne({ id: req.params.id })
+      const task = await app.objection.models.task.query().findById(req.params.id)
         .withGraphFetched('[creator, executor, status, labels]');
       reply.render('tasks/view', { task });
       return reply;
@@ -105,7 +105,7 @@ export default (app) => {
       }
     })
     .get('/tasks/:id/edit', { preValidation: [app.authenticate, verifyTaskId] }, async (req, reply) => {
-      const task = await app.objection.models.task.query().findOne({ id: req.params.id })
+      const task = await app.objection.models.task.query().findById(req.params.id)
         .withGraphFetched('[executor, status, labels]');
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
@@ -133,7 +133,7 @@ export default (app) => {
         const executor = await app.objection.models.user.query()
           .findById(data.executorId);
         const labels = await app.objection.models.label.query().whereIn('id', data.labels);
-        const task = await app.objection.models.task.query().findOne({ id: req.params.id });
+        const task = await app.objection.models.task.query().findById(req.params.id);
         data.creatorId = task.creatorId;
         const updatedTask = await app.objection.models.task.fromJson(data);
         await task.$query().patch(updatedTask);

@@ -4,7 +4,7 @@ import i18next from 'i18next';
 
 export default (app) => {
   const verifyStatusId = async (req, reply, next) => {
-    const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
+    const status = await app.objection.models.taskStatus.query().findById(req.params.id);
     if (!status) {
       const err = app.httpErrors.notFound('Status not found.');
       next(err);
@@ -35,13 +35,13 @@ export default (app) => {
       }
     })
     .get('/statuses/:id/edit', { preValidation: [app.authenticate, verifyStatusId] }, async (req, reply) => {
-      const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
+      const status = await app.objection.models.taskStatus.query().findById(req.params.id);
       reply.render('statuses/edit', { status });
       return reply;
     })
     .patch('/statuses/:id/edit', { name: 'editStatus', preValidation: [app.authenticate, verifyStatusId] }, async (req, reply) => {
       try {
-        const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
+        const status = await app.objection.models.taskStatus.query().findById(req.params.id);
         const updatedStatus = await app.objection.models.taskStatus.fromJson(req.body.data);
         await status.$query().patch(updatedStatus);
         req.flash('info', i18next.t('flash.statuses.edit.success'));
