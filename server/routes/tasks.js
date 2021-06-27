@@ -4,15 +4,6 @@ import i18next from 'i18next';
 import _ from 'lodash';
 
 export default (app) => {
-  const authorize = (req, reply, done) => {
-    if (!req.isAuthenticated()) {
-      req.flash('error', i18next.t('flash.authError'));
-      reply.redirect(app.reverse('root'));
-      return done();
-    }
-    return done();
-  };
-
   const verifyTaskId = async (req, reply) => {
     const task = await app.objection.models.task.query().findOne({ id: req.params.id });
     if (!task) {
@@ -22,7 +13,7 @@ export default (app) => {
   };
 
   app
-    .get('/tasks', { name: 'tasks', preValidation: authorize }, async (req, reply) => {
+    .get('/tasks', { name: 'tasks', preValidation: app.authenticate }, async (req, reply) => {
       const filter = req.query;
       filter.status = filter.status ? Number(filter.status) : null;
       filter.executor = filter.executor ? Number(filter.executor) : null;
@@ -51,13 +42,13 @@ export default (app) => {
       });
       return reply;
     })
-    .get('/tasks/:id', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
+    .get('/tasks/:id', { preValidation: [app.authenticate, verifyTaskId] }, async (req, reply) => {
       const task = await app.objection.models.task.query().findOne({ id: req.params.id })
         .withGraphFetched('[creator, executor, status, labels]');
       reply.render('tasks/view', { task });
       return reply;
     })
-    .get('/tasks/new', { name: 'newTask', preValidation: authorize }, async (req, reply) => {
+    .get('/tasks/new', { name: 'newTask', preValidation: app.authenticate }, async (req, reply) => {
       const task = new app.objection.models.task();
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
@@ -67,7 +58,7 @@ export default (app) => {
       });
       return reply;
     })
-    .post('/tasks', { preValidation: authorize }, async (req, reply) => {
+    .post('/tasks', { preValidation: app.authenticate }, async (req, reply) => {
       const data = { ...req.body.data };
       try {
         if (data.labels) {
@@ -113,7 +104,7 @@ export default (app) => {
         return reply;
       }
     })
-    .get('/tasks/:id/edit', { preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
+    .get('/tasks/:id/edit', { preValidation: [app.authenticate, verifyTaskId] }, async (req, reply) => {
       const task = await app.objection.models.task.query().findOne({ id: req.params.id })
         .withGraphFetched('[executor, status, labels]');
       const users = await app.objection.models.user.query();
@@ -128,7 +119,7 @@ export default (app) => {
       });
       return reply;
     })
-    .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
+    .patch('/tasks/:id/edit', { name: 'editTask', preValidation: [app.authenticate, verifyTaskId] }, async (req, reply) => {
       const data = { ...req.body.data };
       try {
         if (data.labels) {
@@ -171,7 +162,7 @@ export default (app) => {
         return reply;
       }
     })
-    .delete('/tasks/:id', { name: 'deleteTask', preValidation: [authorize, verifyTaskId] }, async (req, reply) => {
+    .delete('/tasks/:id', { name: 'deleteTask', preValidation: [app.authenticate, verifyTaskId] }, async (req, reply) => {
       const task = await app.objection.models.task.query().findById(req.params.id);
       if (task.creatorId !== req.user.id) {
         req.flash('error', i18next.t('flash.tasks.delete.unauthorized'));

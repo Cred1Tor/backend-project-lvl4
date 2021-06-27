@@ -4,12 +4,6 @@ import i18next from 'i18next';
 
 export default (app) => {
   const authorizeById = async (req, reply) => {
-    if (!req.isAuthenticated()) {
-      req.flash('error', i18next.t('flash.authError'));
-      reply.redirect(app.reverse('users'));
-      return;
-    }
-
     const user = await app.objection.models.user.query().findOne({ id: req.params.id });
     if (!user) {
       req.flash('error', i18next.t('flash.users.notFound'));
@@ -46,12 +40,12 @@ export default (app) => {
         return reply;
       }
     })
-    .get('/users/:id/edit', { preValidation: authorizeById }, async (req, reply) => {
+    .get('/users/:id/edit', { preValidation: [app.authenticate, authorizeById] }, async (req, reply) => {
       const user = await app.objection.models.user.query().findOne({ id: req.params.id });
       reply.render('users/edit', { user });
       return reply;
     })
-    .patch('/users/:id/edit', { name: 'editUser', preValidation: authorizeById }, async (req, reply) => {
+    .patch('/users/:id/edit', { name: 'editUser', preValidation: [app.authenticate, authorizeById] }, async (req, reply) => {
       try {
         const user = await app.objection.models.user.query().findOne({ id: req.params.id });
         const updatedUser = await app.objection.models.user.fromJson(req.body.data);
@@ -65,7 +59,7 @@ export default (app) => {
         return reply;
       }
     })
-    .delete('/users/:id', { name: 'deleteUser', preValidation: authorizeById }, async (req, reply) => {
+    .delete('/users/:id', { name: 'deleteUser', preValidation: [app.authenticate, authorizeById] }, async (req, reply) => {
       try {
         const tasks = await app.objection.models.user.relatedQuery('assignedTasks').for(req.params.id);
         if (tasks.length > 0) {

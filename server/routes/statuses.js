@@ -3,15 +3,6 @@
 import i18next from 'i18next';
 
 export default (app) => {
-  const authorize = (req, reply, done) => {
-    if (!req.isAuthenticated()) {
-      req.flash('error', i18next.t('flash.authError'));
-      reply.redirect(app.reverse('root'));
-      return done();
-    }
-    return done();
-  };
-
   const verifyStatusId = async (req, reply) => {
     const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
     if (!status) {
@@ -21,16 +12,16 @@ export default (app) => {
   };
 
   app
-    .get('/statuses', { name: 'statuses', preValidation: authorize }, async (req, reply) => {
+    .get('/statuses', { name: 'statuses', preValidation: app.authenticate }, async (req, reply) => {
       const statuses = await app.objection.models.taskStatus.query();
       reply.render('statuses/index', { statuses });
       return reply;
     })
-    .get('/statuses/new', { name: 'newStatus', preValidation: authorize }, (req, reply) => {
+    .get('/statuses/new', { name: 'newStatus', preValidation: app.authenticate }, (req, reply) => {
       const status = new app.objection.models.taskStatus();
       reply.render('statuses/new', { status });
     })
-    .post('/statuses', { preValidation: authorize }, async (req, reply) => {
+    .post('/statuses', { preValidation: app.authenticate }, async (req, reply) => {
       try {
         const status = await app.objection.models.taskStatus.fromJson(req.body.data);
         await app.objection.models.taskStatus.query().insert(status);
@@ -43,12 +34,12 @@ export default (app) => {
         return reply;
       }
     })
-    .get('/statuses/:id/edit', { preValidation: [authorize, verifyStatusId] }, async (req, reply) => {
+    .get('/statuses/:id/edit', { preValidation: [app.authenticate, verifyStatusId] }, async (req, reply) => {
       const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
       reply.render('statuses/edit', { status });
       return reply;
     })
-    .patch('/statuses/:id/edit', { name: 'editStatus', preValidation: [authorize, verifyStatusId] }, async (req, reply) => {
+    .patch('/statuses/:id/edit', { name: 'editStatus', preValidation: [app.authenticate, verifyStatusId] }, async (req, reply) => {
       try {
         const status = await app.objection.models.taskStatus.query().findOne({ id: req.params.id });
         const updatedStatus = await app.objection.models.taskStatus.fromJson(req.body.data);
@@ -62,7 +53,7 @@ export default (app) => {
         return reply;
       }
     })
-    .delete('/statuses/:id', { name: 'deleteStatus', preValidation: [authorize, verifyStatusId] }, async (req, reply) => {
+    .delete('/statuses/:id', { name: 'deleteStatus', preValidation: [app.authenticate, verifyStatusId] }, async (req, reply) => {
       const status = await app.objection.models.taskStatus.query().findById(req.params.id);
       const tasks = await status.$relatedQuery('tasks');
       if (tasks.length > 0) {
