@@ -18,22 +18,13 @@ export default (app) => {
       filter.status = filter.status ? Number(filter.status) : null;
       filter.executor = filter.executor ? Number(filter.executor) : null;
       filter.label = filter.label ? Number(filter.label) : null;
-      let tasks = await app.objection.models.task.query()
+      filter.creator = filter.isCreatorUser ? req.user.id : null;
+      const tasks = await app.objection.models.task.query()
+        .modify('filterStatus', filter.status)
+        .modify('filterExecutor', filter.executor)
+        .modify('filterLabel', filter.label)
+        .modify('filterCreator', filter.creator)
         .withGraphFetched('[creator, executor, status, labels]');
-      if (filter.status) {
-        tasks = tasks.filter((task) => task.status.id === filter.status);
-      }
-      if (filter.executor) {
-        tasks = tasks.filter((task) => task.executor?.id === filter.executor);
-      }
-      if (filter.label) {
-        tasks = tasks.filter(
-          (task) => task.labels?.some((label) => label.id === filter.label),
-        );
-      }
-      if (filter?.isCreatorUser) {
-        tasks = tasks.filter((task) => task.creator.id === req.user.id);
-      }
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();

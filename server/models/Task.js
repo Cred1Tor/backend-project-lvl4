@@ -75,4 +75,32 @@ export default class Task extends BaseModel {
       },
     };
   }
+
+  static get modifiers() {
+    return {
+      filterStatus(query, statusId) {
+        if (statusId !== null) {
+          query.where('statusId', statusId);
+        }
+      },
+
+      filterExecutor(query, executorId) {
+        if (executorId !== null) {
+          query.where('executorId', executorId);
+        }
+      },
+
+      filterLabel(query, labelId) {
+        if (labelId !== null) {
+          query.whereJsonSupersetOf('labelIds', [labelId]); // FIXME: SQLITE_ERROR: unrecognized token: "#"
+        }
+      },
+
+      filterCreator(query, creatorId) {
+        if (creatorId !== null) {
+          query.where('creatorId', creatorId);
+        }
+      },
+    };
+  }
 }
