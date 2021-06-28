@@ -29,8 +29,7 @@ export default (app) => {
     })
     .post('/users', async (req, reply) => {
       try {
-        const user = await app.objection.models.user.fromJson(req.body.data);
-        await app.objection.models.user.query().insert(user);
+        await app.objection.models.user.query().insert(req.body.data);
         req.flash('info', i18next.t('flash.users.create.success'));
         reply.redirect(app.reverse('root'));
         return reply;
@@ -48,8 +47,7 @@ export default (app) => {
     .patch('/users/:id/edit', { name: 'editUser', preValidation: [app.authenticate, authorizeById] }, async (req, reply) => {
       try {
         const user = await app.objection.models.user.query().findById(req.params.id);
-        const updatedUser = await app.objection.models.user.fromJson(req.body.data);
-        await user.$query().patch(updatedUser);
+        await user.$query().patch(req.body.data);
         req.flash('info', i18next.t('flash.users.edit.success'));
         reply.redirect(app.reverse('users'));
         return reply;
