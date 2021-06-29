@@ -1,13 +1,19 @@
 [
   {
+    "firstName": "Elbert",
+    "lastName": "Abshire",
     "email": "elbert_abshire52@gmail.com",
     "passwordDigest": "b14ad404f1a1dec2e1428ed1d3ee422446903dab0f72b5fa4a1e5d45ee6f75c7"
   },
   {
+    "firstName": "Lawrence",
+    "lastName": "Kulas",
     "email": "lawrence.kulas87@outlook.com",
     "passwordDigest": "87c6374c24969f2af49433baa6d8b96e2bdb17a509b79049d2edb4fde98e4c46"
   },
   {
+    "firstName": "Nona",
+    "lastName": "Murray",
     "email": "nona_murray@yahoo.com",
     "passwordDigest": "760391e7dceb3cf65ee23e97ca3db8c1515d18c3434b003c1fd781053afcf86f"
   }
