@@ -85,7 +85,10 @@ export default (app) => {
           graph.labels = graph.labels.map((id) => ({ id }));
         }
 
-        await app.objection.models.task.query().insertGraph(graph, { relate: true });
+        await app.objection.models.task.knex().transaction(async (trx) => {
+          await app.objection.models.task.query(trx).insertGraph(graph, { relate: true });
+        });
+
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
@@ -148,10 +151,12 @@ export default (app) => {
           graph.labels = graph.labels.map((id) => ({ id }));
         }
 
-        await app.objection.models.task.query().upsertGraph(
-          graph,
-          { relate: true, unrelate: true, noUnrelate: ['creator'] },
-        );
+        await app.objection.models.task.knex().transaction(async (trx) => {
+          await app.objection.models.task.query(trx).upsertGraph(
+            graph,
+            { relate: true, unrelate: true, noUnrelate: ['creator'] },
+          );
+        });
 
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
