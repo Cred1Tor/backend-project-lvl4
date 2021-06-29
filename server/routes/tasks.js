@@ -63,23 +63,29 @@ export default (app) => {
         data.statusId = data.statusId ? Number(data.statusId) : null;
         data.executorId = data.executorId ? Number(data.executorId) : null;
         data.creatorId = req.user.id;
-        const status = await app.objection.models.taskStatus.query().findById(data.statusId);
-        const executor = await app.objection.models.user.query()
-          .findById(data.executorId);
-        const creator = await app.objection.models.user.query().findById(data.creatorId);
-        const labels = await app.objection.models.label.query().whereIn('id', data.labels);
+
         const dataParsed = await app.objection.models.task.fromJson(data);
-        const task = await app.objection.models.task.query().insert(dataParsed);
-        await creator.$relatedQuery('createdTasks').relate(task);
-        if (executor) {
-          await executor.$relatedQuery('assignedTasks').relate(task);
+        const graph = {
+          ...dataParsed,
+
+          creator: {
+            id: data.creatorId,
+          },
+
+          status: {
+            id: data.statusId,
+          },
+        };
+
+        if (data.executorId) {
+          graph.executor = { id: data.executorId };
         }
-        await status.$relatedQuery('tasks').relate(task);
-        if (labels.length > 0) {
-          labels.forEach(async (label) => {
-            await label.$relatedQuery('tasks').relate(task);
-          });
+
+        if (data.labels) {
+          graph.labels = graph.labels.map((id) => ({ id }));
         }
+
+        await app.objection.models.task.query().insertGraph(graph, { relate: true });
         req.flash('info', i18next.t('flash.tasks.create.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
@@ -123,29 +129,35 @@ export default (app) => {
         }
         data.statusId = data.statusId ? Number(data.statusId) : null;
         data.executorId = data.executorId ? Number(data.executorId) : null;
-        const status = await app.objection.models.taskStatus.query().findById(data.statusId);
-        const executor = await app.objection.models.user.query()
-          .findById(data.executorId);
-        const labels = await app.objection.models.label.query().whereIn('id', data.labels);
-        const task = await app.objection.models.task.query().findById(req.params.id);
-        data.creatorId = task.creatorId;
-        const updatedTask = await app.objection.models.task.fromJson(data);
-        await task.$query().patch(updatedTask);
-        await task.$relatedQuery('executor').unrelate();
-        if (executor) {
-          await executor.$relatedQuery('assignedTasks').relate(task);
+
+        const dataParsed = await app.objection.models.task.fromJson(data);
+        const graph = {
+          id: Number(req.params.id),
+          ...dataParsed,
+
+          status: {
+            id: data.statusId,
+          },
+        };
+
+        if (data.executorId) {
+          graph.executor = { id: data.executorId };
         }
-        await status.$relatedQuery('tasks').relate(task);
-        await task.$relatedQuery('labels').unrelate();
-        if (labels.length > 0) {
-          labels.forEach(async (label) => {
-            await label.$relatedQuery('tasks').relate(task);
-          });
+
+        if (data.labels) {
+          graph.labels = graph.labels.map((id) => ({ id }));
         }
+
+        await app.objection.models.task.query().upsertGraph(
+          graph,
+          { relate: true, unrelate: true, noUnrelate: ['creator'] },
+        );
+
         req.flash('info', i18next.t('flash.tasks.edit.success'));
         reply.redirect(app.reverse('tasks'));
         return reply;
       } catch (err) {
+        console.log(err);
         req.flash('error', i18next.t('flash.tasks.edit.error'));
         const users = await app.objection.models.user.query();
         const statuses = await app.objection.models.taskStatus.query();
