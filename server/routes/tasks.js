@@ -19,15 +19,12 @@ export default (app) => {
       filter.executor = filter.executor ? Number(filter.executor) : null;
       filter.label = filter.label ? Number(filter.label) : null;
       filter.creator = filter.isCreatorUser ? req.user.id : null;
-      let tasks = await app.objection.models.task.query()
+      const tasks = await app.objection.models.task.query()
+        .withGraphJoined('[creator, executor, status, labels]')
         .modify('filterStatus', filter.status)
         .modify('filterExecutor', filter.executor)
-        // .modify('filterLabel', filter.label) FIXME how to do this for array?
-        .modify('filterCreator', filter.creator)
-        .withGraphFetched('[creator, executor, status, labels]');
-      if (filter.label) {
-        tasks = tasks.filter((task) => task.labels.some((label) => label.id === filter.label));
-      }
+        .modify('filterLabel', filter.label)
+        .modify('filterCreator', filter.creator);
       const users = await app.objection.models.user.query();
       const statuses = await app.objection.models.taskStatus.query();
       const labels = await app.objection.models.label.query();

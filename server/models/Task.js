@@ -1,9 +1,6 @@
 // @ts-check
 
-// import objectionUnique from 'objection-unique';
 import BaseModel from './BaseModel';
-
-// const unique = objectionUnique({ fields: ['name'] });
 
 export default class Task extends BaseModel {
   static get tableName() {
@@ -20,19 +17,9 @@ export default class Task extends BaseModel {
         statusId: { type: 'integer' },
         creatorId: { type: 'integer' },
         executorId: { type: ['integer', 'null'] },
-        labelIds: {
-          type: 'array',
-          items: {
-            type: 'integer',
-          },
-        },
         description: { type: 'string' },
       },
     };
-  }
-
-  set labelIds(value) {
-    return this;
   }
 
   static get relationMappings() {
@@ -80,25 +67,25 @@ export default class Task extends BaseModel {
     return {
       filterStatus(query, statusId) {
         if (statusId !== null) {
-          query.where('statusId', statusId);
+          query.where({ statusId });
         }
       },
 
       filterExecutor(query, executorId) {
         if (executorId !== null) {
-          query.where('executorId', executorId);
+          query.where({ executorId });
         }
       },
 
       filterLabel(query, labelId) {
         if (labelId !== null) {
-          query.whereJsonSupersetOf('labelIds', [labelId]); // FIXME: SQLITE_ERROR: unrecognized token: "#"
+          query.where({ labelId });
         }
       },
 
       filterCreator(query, creatorId) {
         if (creatorId !== null) {
-          query.where('creatorId', creatorId);
+          query.where({ creatorId });
         }
       },
     };
