@@ -3,11 +3,10 @@
 import i18next from 'i18next';
 
 export default (app) => {
-  const verifyLabelId = async (req, reply, next) => {
+  const verifyLabelId = async (req) => {
     const label = await app.objection.models.label.query().findById(req.params.id);
     if (!label) {
-      const err = app.httpErrors.notFound('Label not found.');
-      next(err);
+      throw app.httpErrors.notFound('Label not found.');
     }
   };
 

@@ -4,11 +4,10 @@ import i18next from 'i18next';
 import _ from 'lodash';
 
 export default (app) => {
-  const verifyTaskId = async (req, reply, next) => {
+  const verifyTaskId = async (req) => {
     const task = await app.objection.models.task.query().findById(req.params.id);
     if (!task) {
-      const err = app.httpErrors.notFound('Label not found.');
-      next(err);
+      throw app.httpErrors.notFound('Label not found.');
     }
   };
 

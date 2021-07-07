@@ -3,12 +3,10 @@
 import i18next from 'i18next';
 
 export default (app) => {
-  const authorizeById = async (req, reply, next) => {
+  const authorizeById = async (req, reply) => {
     const user = await app.objection.models.user.query().findById(req.params.id);
     if (!user) {
-      const err = app.httpErrors.notFound('User not found.');
-      next(err);
-      return;
+      throw app.httpErrors.notFound('User not found.');
     }
 
     if (req.user.id !== user.id) {
