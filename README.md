@@ -3,3 +3,16 @@
 [![Hexlet-check Action Status](https://github.com/Cred1Tor/backend-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/Cred1Tor/backend-project-lvl4/actions?query=workflow%3Ahexlet-check)
 
 [Heroku](https://fierce-badlands-18912.herokuapp.com/)
+
+## Setup
+
+```sh
+$ make setup
+```
+
+## Run
+
+```sh
+$ make start
+# Open localhost:5000
+```
