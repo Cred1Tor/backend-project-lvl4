@@ -1,5 +1,5 @@
 {
-   "name": "@creditor/task-manager",
+   "name": "@hexlet/code",
    "version": "1.0.0",
    "description": "Task manager",
    "main": "server/index.js",
