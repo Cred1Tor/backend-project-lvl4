@@ -173,14 +173,17 @@ export default (app) => {
       const task = await app.objection.models.task.query().findById(req.params.id);
       if (task.creatorId !== req.user.id) {
         req.flash('error', i18next.t('flash.tasks.delete.unauthorized'));
-      } else {
-        try {
-          await task.$query().delete();
-          req.flash('info', i18next.t('flash.tasks.delete.success'));
-        } catch {
-          req.flash('error', i18next.t('flash.tasks.delete.error'));
-        }
+        reply.redirect(app.reverse('tasks'));
+        return reply;
       }
+
+      try {
+        await task.$query().delete();
+        req.flash('info', i18next.t('flash.tasks.delete.success'));
+      } catch {
+        req.flash('error', i18next.t('flash.tasks.delete.error'));
+      }
+
       reply.redirect(app.reverse('tasks'));
       return reply;
     });

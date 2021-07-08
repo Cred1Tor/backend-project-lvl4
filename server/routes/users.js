@@ -60,16 +60,19 @@ export default (app) => {
         const user = await app.objection.models.user.query().findById(req.params.id);
         const assignedTasks = await user.$relatedQuery('assignedTasks');
         const createdTasks = await user.$relatedQuery('createdTasks');
+
         if (assignedTasks.length > 0) {
           req.flash('error', i18next.t('flash.users.delete.hasAssignedTasks'));
           reply.redirect(app.reverse('users'));
           return reply;
         }
+
         if (createdTasks.length > 0) {
           req.flash('error', i18next.t('flash.users.delete.hasCreatedTasks'));
           reply.redirect(app.reverse('users'));
           return reply;
         }
+
         await user.$query().delete();
         req.logOut();
         req.flash('info', i18next.t('flash.users.delete.success'));

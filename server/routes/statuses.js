@@ -57,14 +57,17 @@ export default (app) => {
       const tasks = await status.$relatedQuery('tasks');
       if (tasks.length > 0) {
         req.flash('error', i18next.t('flash.statuses.delete.hasTasks'));
-      } else {
-        try {
-          await app.objection.models.taskStatus.query().deleteById(req.params.id);
-          req.flash('info', i18next.t('flash.statuses.delete.success'));
-        } catch {
-          req.flash('error', i18next.t('flash.statuses.delete.error'));
-        }
+        reply.redirect(app.reverse('statuses'));
+        return reply;
       }
+
+      try {
+        await app.objection.models.taskStatus.query().deleteById(req.params.id);
+        req.flash('info', i18next.t('flash.statuses.delete.success'));
+      } catch {
+        req.flash('error', i18next.t('flash.statuses.delete.error'));
+      }
+
       reply.redirect(app.reverse('statuses'));
       return reply;
     });
