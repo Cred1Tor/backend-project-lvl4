@@ -1,6 +1,6 @@
 {
-   "name": "@hexlet/code",
-   "version": "0.1.0",
+   "name": "@creditor/task-manager",
+   "version": "1.0.0",
    "description": "Task manager",
    "main": "server/index.js",
    "scripts": {
