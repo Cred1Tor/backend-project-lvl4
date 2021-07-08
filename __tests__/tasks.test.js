@@ -38,7 +38,7 @@ describe('test tasks CRUD', () => {
 
   it('index filtered', async () => {
     const filter = {
-      status: testData.statuses.existing1,
+      status: '1',
     };
     const response = await app.inject({
       method: 'GET',
@@ -48,6 +48,12 @@ describe('test tasks CRUD', () => {
     });
 
     expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(
+      expect.stringContaining('finish step'),
+    );
+    expect(response.body).toEqual(
+      expect.not.stringContaining('add tests'),
+    );
   });
 
   it('new', async () => {
